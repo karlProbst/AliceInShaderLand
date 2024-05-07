@@ -1,0 +1,419 @@
+[gd_scene load_steps=26 format=3 uid="uid://dniyrkkdwf3cb"]
+
+[ext_resource type="PackedScene" uid="uid://bwc28g513sfim" path="res://Example World/Objects/World/box_1.tscn" id="2_a2qm0"]
+[ext_resource type="Script" path="res://Example World/Scripts/target.gd" id="3_3ip2t"]
+[ext_resource type="PackedScene" uid="uid://bo6viygofawpl" path="res://Example World/Objects/World/target.tscn" id="3_11x65"]
+[ext_resource type="Texture2D" uid="uid://b6fflns56fw60" path="res://Textures/quadradao.jpg" id="4_1jit2"]
+[ext_resource type="PackedScene" uid="uid://gtthejj2wmyj" path="res://FpsTemplate/Spawnable_Objects/Weapons/blaster_n.tscn" id="4_jtbxf"]
+[ext_resource type="PackedScene" uid="uid://cvbk5bxenpxey" path="res://FpsTemplate/Spawnable_Objects/Weapons/blaster_I.tscn" id="4_olwnw"]
+[ext_resource type="PackedScene" uid="uid://catx2kysw47d8" path="res://FpsTemplate/Spawnable_Objects/Weapons/blaster_L.tscn" id="5_nih8h"]
+[ext_resource type="Environment" uid="uid://bqp54syxqnqww" path="res://FpsTemplate/world_environment.tres" id="7_tfq4t"]
+[ext_resource type="PackedScene" uid="uid://x8nhs2cer2to" path="res://FpsTemplate/Spawnable_Objects/Weapons/blaster_m.tscn" id="7_tjj4i"]
+[ext_resource type="PackedScene" uid="uid://dl236agqx8rjp" path="res://FpsTemplate/Spawnable_Objects/Clips/blaster_i_clip.tscn" id="9_764ue"]
+[ext_resource type="PackedScene" uid="uid://cjxvrad2c6vh8" path="res://FpsTemplate/Spawnable_Objects/Clips/blaster_n_clip.tscn" id="9_qorrx"]
+[ext_resource type="PackedScene" uid="uid://oc13h3au02ro" path="res://FpsTemplate/player_character.tscn" id="10_nucft"]
+[ext_resource type="PackedScene" uid="uid://cgt2lt4ultlaq" path="res://FpsTemplate/Spawnable_Objects/Clips/blaster_m_clip.tscn" id="11_7y05e"]
+[ext_resource type="PackedScene" uid="uid://br6g3dtbytwpu" path="res://FpsTemplate/Spawnable_Objects/Clips/blaster_L_clip.tscn" id="11_xavrm"]
+[ext_resource type="Texture2D" uid="uid://bkppki07fuifu" path="res://Example World/Models/Textures/prototype texture/Dark/texture_01.png" id="12_7osse"]
+[ext_resource type="AudioStream" uid="uid://c2qwgpen6k43w" path="res://musica/happy_innocent.mp3" id="16_0o2sv"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_0vc6i"]
+albedo_texture = ExtResource("4_1jit2")
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_82h0s"]
+
+[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_2xltd"]
+points = PackedVector3Array(-0.5, -1, 0, -0.497651, -1, -0.0490407, -0.497651, -1, 0.0489429, -0.5, 1, 0, -0.490407, -1, -0.097592, -0.497651, 1, -0.0490407, -0.490407, -1, 0.0974941, -0.497651, 1, 0.0489429, -0.478563, -1, -0.145164, -0.490407, 1, -0.097592, -0.478563, -1, 0.145067, -0.490407, 1, 0.0974941, -0.46202, -1, -0.191366, -0.478563, 1, -0.145164, -0.46202, -1, 0.191269, -0.478563, 1, 0.145067, -0.440975, -1, -0.235709, -0.46202, 1, -0.191366, -0.440975, -1, 0.235611, -0.46202, 1, 0.191269, -0.415818, -1, -0.2778, -0.440975, 1, -0.235709, -0.415818, -1, 0.277702, -0.440975, 1, 0.235611, -0.386551, -1, -0.317247, -0.415818, 1, -0.2778, -0.386551, -1, 0.31715, -0.415818, 1, 0.277702, -0.353563, -1, -0.353563, -0.386551, 1, -0.317247, -0.353563, -1, 0.353465, -0.386551, 1, 0.31715, -0.317247, -1, -0.386551, -0.353563, 1, -0.353563, -0.317247, -1, 0.386453, -0.353563, 1, 0.353465, -0.2778, -1, -0.415818, -0.317247, 1, -0.386551, -0.2778, -1, 0.41572, -0.317247, 1, 0.386453, -0.235709, -1, -0.440975, -0.2778, 1, -0.415818, -0.235709, -1, 0.440877, -0.2778, 1, 0.41572, -0.191366, -1, -0.46202, -0.235709, 1, -0.440975, -0.191366, -1, 0.461922, -0.235709, 1, 0.440877, -0.145164, -1, -0.478563, -0.191366, 1, -0.46202, -0.145164, -1, 0.478465, -0.191366, 1, 0.461922, -0.097592, -1, -0.490407, -0.145164, 1, -0.478563, -0.097592, -1, 0.490309, -0.145164, 1, 0.478465, -0.0490407, -1, -0.497651, -0.097592, 1, -0.490407, -0.0490407, -1, 0.497553, -0.097592, 1, 0.490309, 0, -1, -0.5, -0.0490407, 1, -0.497651, 0, -1, 0.5, -0.0490407, 1, 0.497553, 0.0489429, -1, -0.497651, 0, 1, -0.5, 0.0489429, -1, 0.497553, 0, 1, 0.5, 0.0974941, -1, -0.490407, 0.0489429, 1, -0.497651, 0.0974941, -1, 0.490309, 0.0489429, 1, 0.497553, 0.145067, -1, -0.478563, 0.0974941, 1, -0.490407, 0.145067, -1, 0.478465, 0.0974941, 1, 0.490309, 0.191269, -1, -0.46202, 0.145067, 1, -0.478563, 0.191269, -1, 0.461922, 0.145067, 1, 0.478465, 0.235611, -1, -0.440975, 0.191269, 1, -0.46202, 0.235611, -1, 0.440877, 0.191269, 1, 0.461922, 0.277702, -1, -0.415818, 0.235611, 1, -0.440975, 0.277702, -1, 0.41572, 0.235611, 1, 0.440877, 0.31715, -1, -0.386551, 0.277702, 1, -0.415818, 0.31715, -1, 0.386453, 0.277702, 1, 0.41572, 0.353465, -1, -0.353563, 0.31715, 1, -0.386551, 0.353465, -1, 0.353465, 0.31715, 1, 0.386453, 0.386453, -1, -0.317247, 0.353465, 1, -0.353563, 0.386453, -1, 0.31715, 0.353465, 1, 0.353465, 0.41572, -1, -0.2778, 0.386453, 1, -0.317247, 0.41572, -1, 0.277702, 0.386453, 1, 0.31715, 0.440877, -1, -0.235709, 0.41572, 1, -0.2778, 0.440877, -1, 0.235611, 0.41572, 1, 0.277702, 0.461922, -1, -0.191366, 0.440877, 1, -0.235709, 0.461922, -1, 0.191269, 0.440877, 1, 0.235611, 0.478465, -1, -0.145164, 0.461922, 1, -0.191366, 0.478465, -1, 0.145067, 0.461922, 1, 0.191269, 0.490309, -1, -0.097592, 0.478465, 1, -0.145164, 0.490309, -1, 0.0974941, 0.478465, 1, 0.145067, 0.497553, -1, -0.0490407, 0.490309, 1, -0.097592, 0.497553, -1, 0.0489429, 0.490309, 1, 0.0974941, 0.5, -1, 0, 0.497553, 1, -0.0490407, 0.497553, 1, 0.0489429, 0.5, 1, 0)
+
+[sub_resource type="Animation" id="Animation_086ay"]
+resource_name = "ANIM"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Mesh:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.5, 1),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Vector3(0, 0, 0), Vector3(0, 3.14159, 0), Vector3(0, 6.26573, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_8k1lj"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Mesh:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(0, 0, 0)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_0ntiq"]
+_data = {
+"ANIM": SubResource("Animation_086ay"),
+"RESET": SubResource("Animation_8k1lj")
+}
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_t62yf"]
+albedo_texture = ExtResource("12_7osse")
+uv1_triplanar = true
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ov6po"]
+albedo_texture = ExtResource("12_7osse")
+uv1_triplanar = true
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_yv2ts"]
+albedo_texture = ExtResource("12_7osse")
+uv1_triplanar = true
+
+[node name="World" type="Node3D"]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = ExtResource("7_tfq4t")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(-0.843573, -0.446602, -0.298213, -0.283274, -0.101708, 0.953631, -0.456224, 0.888933, -0.0407129, 0, 5.80189, 0)
+layers = 524289
+light_color = Color(1, 1, 0.780392, 1)
+shadow_enabled = true
+
+[node name="Enemy" type="Node3D" parent="."]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 15.8799, 0, 14.0176)
+
+[node name="Target" parent="Enemy" instance=ExtResource("3_11x65")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9.80966, 3.28587, 8.01964)
+
+[node name="Target2" parent="Enemy" instance=ExtResource("3_11x65")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9.80966, 3.28587, 7.4464)
+
+[node name="Target3" parent="Enemy" instance=ExtResource("3_11x65")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9.81585, 3.28587, 6.7426)
+
+[node name="Target4" parent="Enemy" instance=ExtResource("3_11x65")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9.80966, 3.28587, 5.99316)
+
+[node name="Target5" parent="Enemy" instance=ExtResource("3_11x65")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9.80966, 3.28587, 5.27576)
+
+[node name="Target6" parent="Enemy" instance=ExtResource("3_11x65")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9.80966, 2.5638, 8.01964)
+
+[node name="Target7" parent="Enemy" instance=ExtResource("3_11x65")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9.80966, 2.5638, 7.4464)
+
+[node name="Target8" parent="Enemy" instance=ExtResource("3_11x65")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9.80966, 2.5638, 6.71841)
+
+[node name="Target9" parent="Enemy" instance=ExtResource("3_11x65")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9.80966, 2.5638, 5.99316)
+
+[node name="Target10" parent="Enemy" instance=ExtResource("3_11x65")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9.80966, 2.5638, 5.27576)
+
+[node name="Target11" parent="Enemy" instance=ExtResource("3_11x65")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9.80966, 3.28587, 4.58913)
+
+[node name="Target12" parent="Enemy" instance=ExtResource("3_11x65")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9.80966, 3.28587, 4.01589)
+
+[node name="ALVODOMAL" type="StaticBody3D" parent="Enemy" groups=["Interactible", "Target"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.39394, 1.87099, -4.64265)
+collision_layer = 51
+collision_mask = 51
+script = ExtResource("3_3ip2t")
+
+[node name="Mesh" type="MeshInstance3D" parent="Enemy/ALVODOMAL"]
+transform = Transform3D(1, 0, 0, 0, 0.463832, 0, 0, 0, 0.541835, 0, 0, 0)
+material_override = SubResource("StandardMaterial3D_0vc6i")
+mesh = SubResource("CylinderMesh_82h0s")
+skeleton = NodePath("")
+metadata/_edit_group_ = true
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Enemy/ALVODOMAL"]
+transform = Transform3D(1, 0, 0, 0, 0.463832, 0, 0, 0, 0.541835, 0, 0, 0)
+shape = SubResource("ConvexPolygonShape3D_2xltd")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Enemy/ALVODOMAL"]
+libraries = {
+"": SubResource("AnimationLibrary_0ntiq")
+}
+
+[node name="pickable" type="StaticBody3D" parent="Enemy" groups=["Interactible", "Target"]]
+transform = Transform3D(0.335, 0, 0, 0, 0.335, 0, 0, 0, 0.335, 3.29517, 2.65031, -4.64265)
+collision_layer = 51
+collision_mask = 51
+script = ExtResource("3_3ip2t")
+metadata/_edit_group_ = true
+
+[node name="Mesh" type="MeshInstance3D" parent="Enemy/pickable"]
+material_override = SubResource("StandardMaterial3D_0vc6i")
+mesh = SubResource("CylinderMesh_82h0s")
+skeleton = NodePath("")
+metadata/_edit_group_ = true
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Enemy/pickable"]
+shape = SubResource("ConvexPolygonShape3D_2xltd")
+
+[node name="Target14" parent="Enemy" instance=ExtResource("3_11x65")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9.80966, 3.28587, 2.56265)
+
+[node name="Target15" parent="Enemy" instance=ExtResource("3_11x65")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9.80966, 3.28587, 1.84525)
+
+[node name="Target16" parent="Enemy" instance=ExtResource("3_11x65")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9.80966, 2.5638, 4.58913)
+
+[node name="Target17" parent="Enemy" instance=ExtResource("3_11x65")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9.80966, 2.5638, 4.01589)
+
+[node name="Target18" parent="Enemy" instance=ExtResource("3_11x65")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9.80966, 2.5638, 3.2879)
+
+[node name="Target19" parent="Enemy" instance=ExtResource("3_11x65")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9.80966, 2.5638, 2.56265)
+
+[node name="Target20" parent="Enemy" instance=ExtResource("3_11x65")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9.80966, 2.5638, 1.84525)
+
+[node name="Target21" parent="Enemy" instance=ExtResource("3_11x65")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9.80966, 3.28587, 1.24738)
+
+[node name="Target22" parent="Enemy" instance=ExtResource("3_11x65")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9.80966, 3.28587, 0.674143)
+
+[node name="Target23" parent="Enemy" instance=ExtResource("3_11x65")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9.80966, 3.28587, -0.0538473)
+
+[node name="Target24" parent="Enemy" instance=ExtResource("3_11x65")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9.80966, 3.28587, -0.779098)
+
+[node name="Target25" parent="Enemy" instance=ExtResource("3_11x65")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9.80966, 3.28587, -1.4965)
+
+[node name="Target26" parent="Enemy" instance=ExtResource("3_11x65")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9.80966, 2.5638, 1.24738)
+
+[node name="Target27" parent="Enemy" instance=ExtResource("3_11x65")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9.80966, 2.5638, 0.674143)
+
+[node name="Target28" parent="Enemy" instance=ExtResource("3_11x65")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9.80966, 2.5638, -0.0538473)
+
+[node name="Target29" parent="Enemy" instance=ExtResource("3_11x65")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9.80966, 2.5638, -0.779098)
+
+[node name="Target30" parent="Enemy" instance=ExtResource("3_11x65")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9.80966, 2.5638, -1.4965)
+
+[node name="Weapons" type="Node3D" parent="."]
+
+[node name="blasterN" parent="Weapons" instance=ExtResource("4_jtbxf")]
+transform = Transform3D(-0.00543903, 0.00995553, -0.999936, 0.0236036, 0.999673, 0.00982454, 0.999706, -0.0235486, -0.00567224, 21.2958, 1.83198, 11.6068)
+freeze = true
+
+[node name="blasterI2" parent="Weapons" instance=ExtResource("4_olwnw")]
+transform = Transform3D(-4.36023e-08, -3.08644e-09, -1, -0.0706095, 0.997504, 0, 0.997504, 0.0706095, -4.37114e-08, 22.2535, 1.85956, 11.7285)
+freeze = true
+
+[node name="blasterL2" parent="Weapons" instance=ExtResource("5_nih8h")]
+transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 19.9483, 1.94057, 11.4826)
+freeze = true
+
+[node name="blasterM" parent="Weapons" instance=ExtResource("7_tjj4i")]
+transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 18.1838, 1.99763, 11.5761)
+sleeping = true
+freeze = true
+
+[node name="ammo" type="Node3D" parent="." groups=["Ammo"]]
+transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 12.9044, 0, 0)
+
+[node name="blasterI_Clip" parent="ammo" groups=["Ammo"] instance=ExtResource("9_764ue")]
+transform = Transform3D(-0.0581563, 0.998308, -1.59995e-08, 5.86793e-08, 1.9445e-08, 1, 0.998308, 0.0581563, -5.97109e-08, 11.8524, 2.51447, -9.57579)
+
+[node name="blasterI_Clip2" parent="ammo" instance=ExtResource("9_764ue")]
+transform = Transform3D(-0.0581562, 0.998308, -1.59995e-08, 5.86793e-08, 1.9445e-08, 1, 0.998308, 0.0581562, -5.97109e-08, 11.8524, 2.51447, -9.39527)
+
+[node name="blasterI_Clip3" parent="ammo" instance=ExtResource("9_764ue")]
+transform = Transform3D(-0.0581562, 0.998308, -1.59995e-08, 5.86793e-08, 1.9445e-08, 1, 0.998308, 0.0581562, -5.97109e-08, 11.8524, 2.51447, -9.10553)
+
+[node name="blasterI_Clip4" parent="ammo" instance=ExtResource("9_764ue")]
+transform = Transform3D(-0.0581562, 0.998308, -1.59995e-08, 5.86793e-08, 1.9445e-08, 1, 0.998308, 0.0581562, -5.97109e-08, 11.8524, 2.51447, -8.98027)
+
+[node name="blasterI_Clip5" parent="ammo" instance=ExtResource("9_764ue")]
+transform = Transform3D(-0.0581562, 0.998308, -1.59995e-08, 5.86793e-08, 1.9445e-08, 1, 0.998308, 0.0581562, -5.97109e-08, 11.8353, 2.51447, -9.26194)
+
+[node name="blasterN_Clip" parent="ammo" instance=ExtResource("9_qorrx")]
+transform = Transform3D(-0.5, 0.866025, 4.37114e-08, 5.97108e-08, -1.59995e-08, 1, 0.866025, 0.5, -4.37114e-08, 11.8817, 2.45091, -8.4651)
+
+[node name="blasterN_Clip2" parent="ammo" instance=ExtResource("9_qorrx")]
+transform = Transform3D(-0.5, 0.866025, 4.37114e-08, 5.97108e-08, -1.59995e-08, 1, 0.866025, 0.5, -4.37114e-08, 11.8817, 2.45091, -8.30067)
+
+[node name="blasterN_Clip3" parent="ammo" instance=ExtResource("9_qorrx")]
+transform = Transform3D(-0.5, 0.866025, 4.37114e-08, 5.97108e-08, -1.59995e-08, 1, 0.866025, 0.5, -4.37114e-08, 11.8817, 2.45091, -8.15514)
+
+[node name="blasterN_Clip4" parent="ammo" instance=ExtResource("9_qorrx")]
+transform = Transform3D(-0.5, 0.866025, 4.37114e-08, 5.97108e-08, -1.59995e-08, 1, 0.866025, 0.5, -4.37114e-08, 11.8817, 2.45091, -7.98603)
+
+[node name="blasterN_Clip5" parent="ammo" instance=ExtResource("9_qorrx")]
+transform = Transform3D(-0.5, 0.866025, 4.37114e-08, 5.97108e-08, -1.59995e-08, 1, 0.866025, 0.5, -4.37114e-08, 11.8817, 2.45091, -7.80583)
+
+[node name="blasterL_Clip" parent="ammo" instance=ExtResource("11_xavrm")]
+transform = Transform3D(-0.451749, 0.892145, 1.27005e-08, 5.97109e-08, 1.59995e-08, 1, 0.892145, 0.451749, -6.04985e-08, 11.9947, 2.48029, -7.47362)
+
+[node name="blasterL_Clip2" parent="ammo" instance=ExtResource("11_xavrm")]
+transform = Transform3D(0.45382, 0.891093, -4.59471e-08, 1.59995e-08, -5.97109e-08, -1, -0.891093, 0.45382, -4.1355e-08, 11.9522, 2.44837, -7.28242)
+
+[node name="blasterL_Clip3" parent="ammo" instance=ExtResource("11_xavrm")]
+transform = Transform3D(0.5, 0.866025, -4.37114e-08, 1.59995e-08, -5.97109e-08, -1, -0.866025, 0.5, -4.37114e-08, 11.8852, 2.49294, -7.05531)
+
+[node name="blasterL_Clip4" parent="ammo" instance=ExtResource("11_xavrm")]
+transform = Transform3D(-0.258819, 0.965926, -7.96526e-15, 5.97108e-08, 1.59995e-08, 1, 0.965926, 0.258819, -6.18172e-08, 11.8581, 2.5402, -6.8148)
+
+[node name="blasterM_clip" parent="ammo" instance=ExtResource("11_7y05e")]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 11.7864, 2.51904, -5.86928)
+
+[node name="blasterM_clip2" parent="ammo" instance=ExtResource("11_7y05e")]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 11.7864, 2.51904, -5.62425)
+
+[node name="blasterM_clip3" parent="ammo" instance=ExtResource("11_7y05e")]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 11.7864, 2.51904, -5.32416)
+
+[node name="blasterM_clip4" parent="ammo" instance=ExtResource("11_7y05e")]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 11.7864, 2.51904, -5.06811)
+
+[node name="blasterM_clip5" parent="ammo" instance=ExtResource("11_7y05e")]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 11.7864, 2.51904, -4.82932)
+
+[node name="Player_Character" parent="." instance=ExtResource("10_nucft")]
+transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 14.9414, 2.36574, 6.10105)
+
+[node name="level_geometry" type="CSGCombiner3D" parent="."]
+use_collision = true
+
+[node name="CSGBox3D" type="CSGBox3D" parent="level_geometry"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7, 5.86237, 0)
+size = Vector3(36, 12.7247, 50)
+material = SubResource("StandardMaterial3D_t62yf")
+
+[node name="CSGBox3D2" type="CSGBox3D" parent="level_geometry"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.17847, 6.80383, 0)
+operation = 2
+size = Vector3(34.2788, 10.8418, 48)
+material = SubResource("StandardMaterial3D_t62yf")
+
+[node name="CSGBox3D3" type="CSGBox3D" parent="level_geometry"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.5, 2.39544, -15.9147)
+size = Vector3(11, 5.40485, 17)
+material = SubResource("StandardMaterial3D_t62yf")
+
+[node name="CSGPolygon3D" type="CSGPolygon3D" parent="level_geometry"]
+transform = Transform3D(-4.37114e-08, 0, 3.97416, 0, 1, 0, -1, 0, -1.73716e-07, -0.0259876, 1.31426, -2.51557)
+polygon = PackedVector2Array(0, 0, 0, 0, 1.25373, 1.03499, 4.24766, 3.22178, 4.91613, 3.80578, 5, 0, 1, 0)
+depth = 2.54
+material = SubResource("StandardMaterial3D_ov6po")
+
+[node name="CSGPolygon3D2" type="CSGPolygon3D" parent="level_geometry"]
+transform = Transform3D(-4.37114e-08, 0, 3.97416, 0, 1, 0, -1, 0, -1.73716e-07, 24.4923, 1.31426, -5.5095)
+polygon = PackedVector2Array(0, 0, 0, 0, 1.25373, 1.03499, 4.24766, 3.22178, 4.91613, 3.80578, 5, 0, 1, 0)
+depth = 0.65
+material = SubResource("StandardMaterial3D_ov6po")
+
+[node name="CSGBox3D4" type="CSGBox3D" parent="level_geometry"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.931463, 1.86819, -7.91462)
+size = Vector3(2, 1, 1)
+material = SubResource("StandardMaterial3D_yv2ts")
+
+[node name="CSGBox3D5" type="CSGBox3D" parent="level_geometry"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.931463, 2.36819, -8.91462)
+size = Vector3(2, 2, 1)
+material = SubResource("StandardMaterial3D_yv2ts")
+
+[node name="CSGBox3D6" type="CSGBox3D" parent="level_geometry"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.931463, 2.86819, -9.91462)
+size = Vector3(2, 3, 1)
+material = SubResource("StandardMaterial3D_yv2ts")
+
+[node name="CSGBox3D7" type="CSGBox3D" parent="level_geometry"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.931463, 3.22879, -17.4146)
+size = Vector3(2, 3.72119, 14)
+material = SubResource("StandardMaterial3D_yv2ts")
+
+[node name="CSGBox3D8" type="CSGBox3D" parent="level_geometry"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.93146, 3.22879, -17.4146)
+size = Vector3(2, 3.72119, 14)
+material = SubResource("StandardMaterial3D_yv2ts")
+
+[node name="CSGBox3D9" type="CSGBox3D" parent="level_geometry"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9.93146, 3.22879, -17.4146)
+size = Vector3(2, 3.72119, 14)
+material = SubResource("StandardMaterial3D_yv2ts")
+
+[node name="CSGBox3D10" type="CSGBox3D" parent="level_geometry"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15.9315, 3.22879, -17.4146)
+size = Vector3(2, 3.72119, 14)
+material = SubResource("StandardMaterial3D_yv2ts")
+
+[node name="CSGBox3D12" type="CSGBox3D" parent="level_geometry"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12.9315, 2.36819, 18.5854)
+size = Vector3(2, 2, 14)
+material = SubResource("StandardMaterial3D_yv2ts")
+
+[node name="CSGBox3D13" type="CSGBox3D" parent="level_geometry"]
+transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 18.9315, 2.36819, 12.5924)
+size = Vector3(2, 2, 14)
+material = SubResource("StandardMaterial3D_yv2ts")
+
+[node name="CSGBox3D14" type="CSGBox3D" parent="level_geometry"]
+transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 19.0214, 3.44817, 12.557)
+operation = 2
+size = Vector3(2.4917, 2, 9.15033)
+material = SubResource("StandardMaterial3D_yv2ts")
+
+[node name="CSGBox3D11" type="CSGBox3D" parent="level_geometry"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 23.2508, 3.22879, -17.4146)
+size = Vector3(2.63867, 3.72119, 14)
+material = SubResource("StandardMaterial3D_yv2ts")
+
+[node name="physics_objects" type="Node3D" parent="."]
+
+[node name="box1" parent="physics_objects" instance=ExtResource("2_a2qm0")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.703171, 2.06818, 20.9151)
+
+[node name="box2" parent="physics_objects" instance=ExtResource("2_a2qm0")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.8627, 2.06818, 20.9151)
+
+[node name="box3" parent="physics_objects" instance=ExtResource("2_a2qm0")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.01581, 2.06818, 20.9151)
+
+[node name="box4" parent="physics_objects" instance=ExtResource("2_a2qm0")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.33112, 3.06818, 20.9151)
+
+[node name="box5" parent="physics_objects" instance=ExtResource("2_a2qm0")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.21999, 3.05115, 20.9151)
+
+[node name="box6" parent="physics_objects" instance=ExtResource("2_a2qm0")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.703171, 2.06818, 19.9151)
+
+[node name="box7" parent="physics_objects" instance=ExtResource("2_a2qm0")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.8627, 2.06818, 19.9151)
+
+[node name="box8" parent="physics_objects" instance=ExtResource("2_a2qm0")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.01581, 2.06818, 19.9151)
+
+[node name="box9" parent="physics_objects" instance=ExtResource("2_a2qm0")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.33112, 3.06818, 19.9151)
+
+[node name="box10" parent="physics_objects" instance=ExtResource("2_a2qm0")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.1989, 3.06818, 19.9151)
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("16_0o2sv")
+autoplay = true
+bus = &"Music"
