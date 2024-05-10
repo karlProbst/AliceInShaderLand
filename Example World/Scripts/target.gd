@@ -16,6 +16,7 @@ func PlayAction():
 		$AnimationPlayer.play("ANIM")
 	set_shader()
 	
+	
 func set_shader():
 	var mesh_instance = $Mesh
 

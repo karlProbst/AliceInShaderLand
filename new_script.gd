@@ -5,7 +5,7 @@ extends CharacterBody3D
 @onready var shader_code = load("res://Example World/Objects/World/High.gdshader")
 #const SPEED = 5.0
 var _speed: float
-const JUMP_VELOCITY = 1.5
+const JUMP_VELOCITY = 4.5
 
 var CameraRotation: Vector2 = Vector2(0.0,0.0)
 var MouseSensitivity = 0.0032
@@ -24,9 +24,14 @@ var int_node_array := []
 
 
 var isInteractive = false
-
-
-
+var Crouched: bool = false
+var Crouch_Blocked: bool = false
+@export_category("Crouch Parametres")
+@export var Crouch_Toggle: bool = false
+@export var Crouch_Collision: ShapeCast3D
+@export_range(0.0,3.0) var Crouch_Speed_Reduction = 2.0
+@export_range(0.0,0.50) var Crouch_Blend_Speed = .2
+enum {GROUND_CROUCH = -1, STANDING = 0, AIR_CROUCH = 1}
 var paused=false
 @export_category("Lean Parametres")
 @export_range(0.0,1.0) var Lean_Speed: float = .2
@@ -69,15 +74,10 @@ var Jump_Velocity: float
 var Speed: float
 var Jump_Available: bool = true
 var Jump_Buffer: bool = false
-var hit_location = Vector3.ZERO
+var hit_location =Vector3.ZERO
 var scale_var
-
-var chapadao = 0
 func _ready():
-	$Camera/glassass.mesh.material.set_shader_parameter("distortion_size",0)
-	$Camera/glassass/AnimationPlayer.play("offset")
 	scale_var=scale
-
 	Update_CameraRotation()
 	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
 	Calculate_Movement_Parameters()
@@ -100,16 +100,15 @@ func StartMenu():
 		$Ui/Hit_Sight.visible=false
 		$Ui/Interaction.visible=false
 		$Ui/Main_Sight.visible=false
-		$Ui/BlurVignette.material.set_shader_parameter("blur_radius", 1)
-		$Ui/BlurVignette.material.set_shader_parameter("blur_amount", 5.0)
+		$Ui/ColorRect.material.set_shader_parameter("blur_radius", 1)
+		$Ui/ColorRect.material.set_shader_parameter("blur_amount", 5.0)
 	else:
-		$Ui/BlurVignette.material.set_shader_parameter("blur_radius", 0.2)
-		$Ui/BlurVignette.material.set_shader_parameter("blur_amount", 1.0)
+		$Ui/ColorRect.material.set_shader_parameter("blur_radius", 0.2)
+		$Ui/ColorRect.material.set_shader_parameter("blur_amount", 1.0)
 		$Ui/Start.visible=false
 		$Ui/Main_Sight.visible=true
 		$Ui/Interaction.visible=true
 func _input(event):
-	
 	if event.is_action_pressed("ui_cancel"):
 		StartMenu()
 	if(!paused):
@@ -119,41 +118,37 @@ func _input(event):
 			var MouseEvent = event.relative * MouseSensitivity
 			CameraLook(MouseEvent)
 			
-	
+		if event.is_action_pressed("crouch"):
+			Crouch()
+		if event.is_action_released("crouch"):
+			if !Crouch_Toggle and Crouched:
+				Crouch()
 		
 			
 		if Input.is_action_just_released("lean_left") or Input.is_action_just_released("lean_right"):
 			if !(Input.is_action_pressed("lean_right") or Input.is_action_pressed("lean_left")):
 				pass
 		if Input.is_action_just_pressed("lean_left"):
-			if scale_var.x>0.1:
-				
-				self.scale/=2
-				scale_var/=2
-				Jump_Height=scale_var.x/200
-				Jump_Distance=scale_var.x/500
-				Jump_Peak_Time=scale_var.x/500
-			
+			self.scale/=2
 		if Input.is_action_just_pressed("lean_right"):
 			if isInteractive:
 				print("node:", isInteractive.Name)
 				
 				if isInteractive.has_method("PlayAction"):
 					isInteractive.PlayAction()
-					chapadao+=3
-					print("LJJLDJKD")
+				
 			
 		if Input.is_action_just_released("sprint") or Input.is_action_just_released("walk"):
 			if !(Input.is_action_pressed("walk") or Input.is_action_pressed("sprint")):
 				Speed_Modifier = NORMAL_SPEED
 				exit_sprint()
 
-		if Input.is_action_just_pressed("sprint"):
+		if Input.is_action_just_pressed("sprint") and !Crouched:
 			if !Sprint_On_Cooldown:
 				Speed_Modifier = Sprint_Speed
 				Sprint_Timer.start(Sprint_Time_Remaining)
 
-		if Input.is_action_just_pressed("walk"):
+		if Input.is_action_just_pressed("walk") and !Crouched:
 			Speed_Modifier = Walk_Speed
 
 func Calculate_Movement_Parameters()->void:
@@ -163,8 +158,51 @@ func Calculate_Movement_Parameters()->void:
 	Speed = Jump_Distance/(Jump_Peak_Time+Jump_Fall_Time)
 	_speed = Speed
 
+func lean(blend_amount: int):
+	if is_on_floor():
+		if lean_tween:
+			lean_tween.kill()
+		
+		lean_tween = get_tree().create_tween().set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_SPRING)
+		lean_tween.tween_property(animation_tree,"parameters/lean_blend/blend_amount", blend_amount, Lean_Speed)
 
+func lean_collision():
+	animation_tree["parameters/left_collision_blend/blend_amount"] = lerp(
+		float(animation_tree["parameters/left_collision_blend/blend_amount"]),float(Left_Lean_Collision.is_colliding()),Lean_Speed
+	)
+	animation_tree["parameters/right_collision_blend/blend_amount"] = lerp(
+		float(animation_tree["parameters/right_collision_blend/blend_amount"]),float(Right_Lean_Collision.is_colliding()),Lean_Speed
+	)
 
+func Crouch():
+	var Blend
+	if !Crouch_Collision.is_colliding():
+		if Crouched:
+			Blend = STANDING
+		else:
+			Speed_Modifier = NORMAL_SPEED
+			exit_sprint()
+			
+			if is_on_floor():
+				Blend = GROUND_CROUCH
+			else:
+				Blend = AIR_CROUCH
+		var blend_tween = get_tree().create_tween()
+		blend_tween.tween_property(animation_tree,"parameters/Crouch_Blend/blend_amount",Blend,Crouch_Blend_Speed)
+		Crouched = !Crouched
+	else:
+		Crouch_Blocked = true
+
+func CameraLook(Movement: Vector2):
+	
+	CameraRotation += Movement
+	
+	transform.basis = Basis()
+	Camera.transform.basis = Basis()
+	
+	rotate_object_local(Vector3(0,1,0),-CameraRotation.x) # first rotate in Y
+	Camera.rotate_object_local(Vector3(1,0,0), -CameraRotation.y) # then rotate in X
+	CameraRotation.y = clamp(CameraRotation.y,-1.5,1.2)
 	
 func exit_sprint():
 	if !Sprint_Timer.is_stopped():
@@ -201,7 +239,6 @@ func ShowInteraction(isInteractible,node,hitLocation):
 			int_node_array.erase(i)
 			
 	if(isInteractible):
-		isInteractive=node
 		hit_location=hitLocation
 		meshnode = node.get_child(0)
 		int_node_array.append(meshnode)
@@ -214,19 +251,9 @@ func ShowInteraction(isInteractible,node,hitLocation):
 			int_node_array.erase(i)
 
 	uiInt.visible=isInteractible
-
+	
 func _physics_process(delta):
 	
-	if(chapadao>0):
-		var d = $Camera/glassass.mesh.material.get_shader_parameter("distortion_size")
-		if(d<chapadao):
-			d+=delta/14
-		else:
-			d-=delta
-		$Camera/glassass.mesh.material.set_shader_parameter("distortion_size",d)
-		chapadao-=delta/14
-	else:
-		$Camera/glassass.mesh.material.set_shader_parameter("distortion_size",0)
 	#if(hit_location!=Vector3.ZERO):
 	#	var distance_to_hit = global_transform.origin.distance_to(hit_location)
 	#	print(distance_to_hit)
@@ -238,16 +265,21 @@ func _physics_process(delta):
 		if rayInt.is_colliding():
 			var collision = rayInt.get_collider()
 			if collision.is_in_group("Interactible"):
-				
 				ShowInteraction(true,collision,rayInt.get_collision_point())
+				
 			else:
 				ShowInteraction(false,false,Vector3.ZERO)
 		else:
 			ShowInteraction(false,false,Vector3.ZERO)
 			
 		Sprint_Replenish(delta)
-
-	
+		lean_collision()
+			
+		if Crouched and Crouch_Blocked:
+			if !Crouch_Collision.is_colliding():
+				Crouch_Blocked = false
+				if !Input.is_action_pressed("crouch") and !Crouch_Toggle:
+					Crouch()
 
 		# Add the gravity.
 		if not is_on_floor():
@@ -261,16 +293,18 @@ func _physics_process(delta):
 		else:
 			Jump_Available = true
 			coyote_timer.stop()
-			_speed = (Speed / Speed_Modifier*scale_var.x)
-			$Camera/lean_pivot/MainCamera.fov=88+(1-scale_var.x)*15
+			_speed = (Speed / max((float(Crouched)*Crouch_Speed_Reduction),1)) * Speed_Modifier
 			if Jump_Buffer:
 				Jump()
 				Jump_Buffer = false
-		
 		# Handle Jump.
 		if Input.is_action_just_pressed("ui_accept"):
 			if Jump_Available:
-				Jump()
+				if Crouched:
+					Crouch()
+				else:
+					lean(CENTRE)
+					Jump()
 			else:
 				Jump_Buffer = true
 				get_tree().create_timer(Jump_Buffer_Time).timeout.connect(on_jump_buffer_timeout)
@@ -282,7 +316,6 @@ func _physics_process(delta):
 
 		velocity.x = move_toward(velocity.x, direction.x * _speed, Speed)
 		velocity.z = move_toward(velocity.z, direction.z * _speed, Speed)
-		
 		move_and_slide()
 
 func Jump()->void:
@@ -337,56 +370,3 @@ func ChangeSen(value):
 	var mapped_sensitivity = lerp(sensitivity_min, sensitivity_max, normalized_value)
 	MouseSensitivity = mapped_sensitivity
 	
-func CameraLook(Movement: Vector2):
-	
-	CameraRotation += Movement
-	
-	transform.basis = Basis()*scale_var.x
-	Camera.transform.basis = Basis()
-	
-	rotate_object_local(Vector3(0,1,0),-CameraRotation.x) # first rotate in Y
-	Camera.rotate_object_local(Vector3(1,0,0), -CameraRotation.y) # then rotate in X
-	CameraRotation.y = clamp(CameraRotation.y,-1.5,1.2)
-	
-
-func CallCamera2(node, delta, speed):
-	var target_dir = (node.global_transform.origin - global_transform.origin).normalized()
-	var target_rot = Basis().looking_at(target_dir, Vector3(0, 1, 0))
-	global_transform.basis = global_transform.basis.slerp(target_rot, speed * delta)
-
-	var rotation = self.global_transform.basis.get_euler()
-
-	# Extract yaw and pitch angles from the rotation
-	var yaw = 0
-	var pitch = rotation.x
-
-	# Set CameraRotation to the extracted angles
-	CameraRotation = Vector2(yaw, pitch)
-	Update_CameraRotation()
-	
-func CallCamera(target_node: Node, delta: float, base_speed: float, max_rotation_speed: float = 0.1):
-	# Get the target node's global position
-	var target_global_position = target_node.global_transform.origin
-	var player_rotation_y = rotation.y
-	# Get the player's forward direction based on rotation
-	var player_forward = Vector3(sin(player_rotation_y), 0, cos(player_rotation_y))
-	# Calculate the direction to the target node
-	var direction_to_target = global_transform.origin - target_global_position
-	direction_to_target.y = 0  # Ensure no vertical movement
-	# Add a small epsilon to denominator to avoid division by zero
-	var denominator = direction_to_target.x + 0.0001
-	# Calculate the angle between player's forward direction and direction to target
-	var angle_to_target = atan2(direction_to_target.z, denominator) - atan2(player_forward.z, player_forward.x)
-	# Smoothly rotate towards the angle to the target
-	CameraLook(Vector2(angle_to_target / 10, 0))
-
-
-
-
-
-
-
-
-
-	
-

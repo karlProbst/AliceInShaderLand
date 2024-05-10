@@ -1,0 +1,43 @@
+[gd_scene load_steps=5 format=3 uid="uid://dw6oimjl4nig1"]
+
+[ext_resource type="Material" uid="uid://cmcetn3jo6tdg" path="res://FpsTemplate/glass.tres" id="1_g3ups"]
+
+[sub_resource type="QuadMesh" id="QuadMesh_sblb5"]
+material = ExtResource("1_g3ups")
+
+[sub_resource type="Animation" id="Animation_reudm"]
+resource_name = "offset"
+length = 2.0
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Camera/glassass:mesh:material:shader_parameter/glass:noise:offset")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(-0.1, 0.4, 1.1, 2, 5.2),
+"transitions": PackedFloat32Array(4.14106, 0.353554, 3.36358, 0.63728, 1),
+"update": 0,
+"values": [Vector3(0, 0, 0), Vector3(10, 100, 0), Vector3(-10, 200, 0), Vector3(10, 300, 0), Vector3(0, 0, 0)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_4yl2r"]
+_data = {
+"offset": SubResource("Animation_reudm")
+}
+
+[node name="glassass" type="MeshInstance3D"]
+transform = Transform3D(0.521383, 0, 0, 0, 0.490623, 0, 0, 0, 1, 0, 0.0137173, -0.088446)
+mesh = SubResource("QuadMesh_sblb5")
+skeleton = NodePath("../../Node3D")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+reset_on_save = false
+root_node = NodePath("../../..")
+callback_mode_process = 0
+callback_mode_method = 1
+libraries = {
+"": SubResource("AnimationLibrary_4yl2r")
+}
+speed_scale = 0.01

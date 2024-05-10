@@ -1,4 +1,4 @@
-[gd_scene load_steps=26 format=3 uid="uid://dniyrkkdwf3cb"]
+[gd_scene load_steps=28 format=3 uid="uid://dniyrkkdwf3cb"]
 
 [ext_resource type="PackedScene" uid="uid://bwc28g513sfim" path="res://Example World/Objects/World/box_1.tscn" id="2_a2qm0"]
 [ext_resource type="Script" path="res://Example World/Scripts/target.gd" id="3_3ip2t"]
@@ -16,6 +16,8 @@
 [ext_resource type="PackedScene" uid="uid://br6g3dtbytwpu" path="res://FpsTemplate/Spawnable_Objects/Clips/blaster_L_clip.tscn" id="11_xavrm"]
 [ext_resource type="Texture2D" uid="uid://bkppki07fuifu" path="res://Example World/Models/Textures/prototype texture/Dark/texture_01.png" id="12_7osse"]
 [ext_resource type="AudioStream" uid="uid://c2qwgpen6k43w" path="res://musica/happy_innocent.mp3" id="16_0o2sv"]
+[ext_resource type="Script" path="res://Example World/Objects/World/folowCamera.gd" id="17_0vret"]
+[ext_resource type="PackedScene" uid="uid://dkq87tmtg2tfr" path="res://Assets 3d/AP.glb" id="18_24orx"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_0vc6i"]
 albedo_texture = ExtResource("4_1jit2")
@@ -417,3 +419,10 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.1989, 3.06818, 19.9151)
 stream = ExtResource("16_0o2sv")
 autoplay = true
 bus = &"Music"
+
+[node name="Node3D" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11.2481, 2.68668, 10.6148)
+script = ExtResource("17_0vret")
+
+[node name="AP" parent="." instance=ExtResource("18_24orx")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 41.6164, 2.44817, 12.7537)
