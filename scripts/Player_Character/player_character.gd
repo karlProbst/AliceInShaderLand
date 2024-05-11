@@ -140,7 +140,7 @@ func _input(event):
 				
 				if isInteractive.has_method("PlayAction"):
 					isInteractive.PlayAction()
-					chapadao+=3
+					chapadao+=1
 					print("LJJLDJKD")
 			
 		if Input.is_action_just_released("sprint") or Input.is_action_just_released("walk"):
@@ -214,10 +214,27 @@ func ShowInteraction(isInteractible,node,hitLocation):
 			int_node_array.erase(i)
 
 	uiInt.visible=isInteractible
+func add_audio_effect(audio_source, effect,intensity):
+	# Create an instance of AudioEffectEcho
+	if(AudioServer.get_bus_effect_count(audio_source)==0):
+		var echo_effect = AudioEffectDelay.new()
+		echo_effect.feedback_active=true
+		echo_effect.feedback_delay_ms=intensity*3.0
+		AudioServer.add_bus_effect(audio_source,echo_effect,-1)
+		var phaser_effect = AudioEffectPhaser.new()
+		phaser_effect.depth=0.3
+		phaser_effect.feedback=0.7
+		AudioServer.add_bus_effect(audio_source,phaser_effect,-1)
+	# et parameters for the echo effect
+	
 
+func remove_all_audio_effects(audio_source):
+	for i in range(AudioServer.get_bus_effect_count(audio_source)):
+		AudioServer.remove_bus_effect(audio_source,i) # Remove effect at index 0
 func _physics_process(delta):
 	
 	if(chapadao>0):
+		add_audio_effect(AudioServer.get_bus_index("Music"), 6,chapadao)
 		var d = $Camera/glassass.mesh.material.get_shader_parameter("distortion_size")
 		if(d<chapadao):
 			d+=delta/14
@@ -225,7 +242,9 @@ func _physics_process(delta):
 			d-=delta
 		$Camera/glassass.mesh.material.set_shader_parameter("distortion_size",d)
 		chapadao-=delta/14
+		
 	else:
+		remove_all_audio_effects(AudioServer.get_bus_index("Music"))
 		$Camera/glassass.mesh.material.set_shader_parameter("distortion_size",0)
 	#if(hit_location!=Vector3.ZERO):
 	#	var distance_to_hit = global_transform.origin.distance_to(hit_location)
