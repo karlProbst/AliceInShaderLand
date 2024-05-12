@@ -12,6 +12,6 @@ func _ready():
 				child.material_override = material
 			# Generate a random color
 			var d = 0.8
-			var random_color = Color(randf()/d, 1.4, randf()/d)
+			var random_color = Color(randf()/d, 1.0, randf()/d)
 			# Set the albedo color
 			material.albedo_color = random_color

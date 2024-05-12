@@ -1,4 +1,4 @@
-[gd_scene load_steps=58 format=3 uid="uid://oc13h3au02ro"]
+[gd_scene load_steps=60 format=3 uid="uid://oc13h3au02ro"]
 
 [ext_resource type="Script" path="res://scripts/Player_Character/player_character.gd" id="1_dwwa2"]
 [ext_resource type="Script" path="res://scripts/Player_Character/HUD.gd" id="2_beh8p"]
@@ -9,6 +9,58 @@
 [ext_resource type="AnimationLibrary" uid="uid://uybino34n0sj" path="res://FpsTemplate/weapon_animation.res" id="13_lmhsg"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_bu4qy"]
+
+[sub_resource type="Animation" id="Animation_xx13w"]
+resource_name = "new_animation"
+tracks/0/type = "bezier"
+tracks/0/imported = false
+tracks/0/enabled = false
+tracks/0/path = NodePath("Ui/Black:color:r")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"handle_modes": PackedInt32Array(0),
+"points": PackedFloat32Array(0, -0.25, 0, 0.25, 0),
+"times": PackedFloat32Array(1)
+}
+tracks/1/type = "bezier"
+tracks/1/imported = false
+tracks/1/enabled = false
+tracks/1/path = NodePath("Ui/Black:color:g")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"handle_modes": PackedInt32Array(0),
+"points": PackedFloat32Array(0, -0.25, 0, 0.25, 0),
+"times": PackedFloat32Array(1)
+}
+tracks/2/type = "bezier"
+tracks/2/imported = false
+tracks/2/enabled = false
+tracks/2/path = NodePath("Ui/Black:color:b")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"handle_modes": PackedInt32Array(0),
+"points": PackedFloat32Array(0, -0.25, 0, 0.25, 0),
+"times": PackedFloat32Array(1)
+}
+tracks/3/type = "bezier"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("Ui/Black:color:a")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"handle_modes": PackedInt32Array(0, 0),
+"points": PackedFloat32Array(1, 0, 0, 0, 0, 0, -0.25, 0, 0.25, 0),
+"times": PackedFloat32Array(0, 1)
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_qwk63"]
+_data = {
+"new_animation": SubResource("Animation_xx13w")
+}
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_5mxbr"]
 shader = ExtResource("3_w3n5t")
@@ -1016,6 +1068,13 @@ offset_right = 1600.0
 offset_bottom = 900.0
 color = Color(0, 0, 0, 0)
 
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Ui/Black"]
+root_node = NodePath("../../..")
+libraries = {
+"": SubResource("AnimationLibrary_qwk63")
+}
+speed_scale = 0.332
+
 [node name="BlurVignette" type="ColorRect" parent="Ui"]
 material = SubResource("ShaderMaterial_5mxbr")
 offset_right = 1600.0
@@ -1116,7 +1175,7 @@ scrollable = false
 
 [node name="Camera" type="Node3D" parent="."]
 unique_name_in_owner = true
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.75, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.75, 0.0138881)
 
 [node name="glassass" type="MeshInstance3D" parent="Camera"]
 transform = Transform3D(0.521383, 0, 0, 0, 0.490623, 0, 0, 0, 1, 0, 0.0137173, -0.088446)

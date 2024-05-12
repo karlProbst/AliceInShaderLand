@@ -60,7 +60,7 @@ var Speed_Modifier: float = NORMAL_SPEED
 @export var Jump_Buffer_Time: float = .2
 @onready var coyote_timer: Timer = $Coyote_Timer
 @onready var saturation_anim = get_node("../WorldEnvironment/AnimationPlayer")
-
+@onready var eye = get_node("../Eye")
 
 # Get the gravity from the project settings to be synced with RigidBody nodes.
 var Jump_Gravity = ProjectSettings.get_setting("physics/3d/default_gravity")
@@ -233,8 +233,21 @@ func add_audio_effect(audio_source, effect,intensity):
 func remove_all_audio_effects(audio_source):
 	for i in range(AudioServer.get_bus_effect_count(audio_source)):
 		AudioServer.remove_bus_effect(audio_source,i) # Remove effect at index 0
+func Camera_eye(delta):
+
+	var distance_to_eye = eye.global_transform.origin.distance_to(self.global_transform.origin)
+
+	# Map the distance to the object's z position
+	if distance_to_eye > 2.0:
+		Camera.transform.origin.z=0  # If the distance is greater than 2 meters, set z to 0
+	else:
+		# Linearly interpolate the z position from -0.7 (at 0 meters) to 0 (at 2 meters)
+		Camera.transform.origin.z= lerp(-0.7, 0.0, distance_to_eye / 2.0)
+
+
+
 func _physics_process(delta):
-	
+	Camera_eye(delta)
 	if(chapadao>0):
 		add_audio_effect(AudioServer.get_bus_index("Music"), 6,chapadao)
 		var d = $Camera/glassass.mesh.material.get_shader_parameter("distortion_size")
@@ -412,7 +425,9 @@ func CallCamera(target_node: Node, delta: float, base_speed: float, max_rotation
 	# Smoothly rotate towards the angle to the target
 	CameraLook(Vector2(angle_to_target / 10, 0))
 
-
+func fade():
+	$Ui/Black/AnimationPlayer.stop()
+	$Ui/Black/AnimationPlayer.play("new_animation")
 
 
 

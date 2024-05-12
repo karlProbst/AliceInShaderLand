@@ -46,7 +46,7 @@ func _physics_process(delta):
 			low_velocity_timer += delta
 		else:
 			low_velocity_timer = 0
-		print(low_velocity_timer)
+		
 		if low_velocity_timer > 0.5 and distance_to_target > stop_radius:
 			rotate_y(delta * rotation_speed)  # Rotate the cat
 			current_speed+=delta
