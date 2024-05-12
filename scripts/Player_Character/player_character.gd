@@ -59,7 +59,7 @@ var Speed_Modifier: float = NORMAL_SPEED
 @export var Coyote_Time: float = .1
 @export var Jump_Buffer_Time: float = .2
 @onready var coyote_timer: Timer = $Coyote_Timer
-
+@onready var saturation_anim = get_node("../WorldEnvironment/AnimationPlayer")
 
 
 # Get the gravity from the project settings to be synced with RigidBody nodes.
@@ -74,6 +74,7 @@ var scale_var
 
 var chapadao = 0
 func _ready():
+
 	$Camera/glassass.mesh.material.set_shader_parameter("distortion_size",0)
 	$Camera/glassass/AnimationPlayer.play("offset")
 	scale_var=scale
@@ -140,7 +141,8 @@ func _input(event):
 				
 				if isInteractive.has_method("PlayAction"):
 					isInteractive.PlayAction()
-					chapadao+=1
+					if isInteractive.Name=="Shroom":
+						chapadao+=25.0
 					print("LJJLDJKD")
 			
 		if Input.is_action_just_released("sprint") or Input.is_action_just_released("walk"):
@@ -237,13 +239,24 @@ func _physics_process(delta):
 		add_audio_effect(AudioServer.get_bus_index("Music"), 6,chapadao)
 		var d = $Camera/glassass.mesh.material.get_shader_parameter("distortion_size")
 		if(d<chapadao):
-			d+=delta/14
+			d+=delta/20
 		else:
-			d-=delta
+			d=lerp(d,0.0,delta)
+		
+		#world_env.environment.brightness = 1+(d/2)
+		#world_env.contrast =1+d
+		saturation_anim.play("new_animation")
+		
+		saturation_anim.seek(d*6)
+
 		$Camera/glassass.mesh.material.set_shader_parameter("distortion_size",d)
-		chapadao-=delta/14
+		chapadao=lerp(chapadao,0.0,delta)
 		
 	else:
+		saturation_anim.seek(0)
+		#world_env.brightness = 1
+		#world_env.contrast =1
+	
 		remove_all_audio_effects(AudioServer.get_bus_index("Music"))
 		$Camera/glassass.mesh.material.set_shader_parameter("distortion_size",0)
 	#if(hit_location!=Vector3.ZERO):
@@ -360,7 +373,7 @@ func CameraLook(Movement: Vector2):
 	
 	CameraRotation += Movement
 	
-	transform.basis = Basis()*scale_var.x
+	transform.basis = Basis()*scale_var.x*1.4
 	Camera.transform.basis = Basis()
 	
 	rotate_object_local(Vector3(0,1,0),-CameraRotation.x) # first rotate in Y

@@ -1,4 +1,4 @@
-[gd_scene load_steps=57 format=3 uid="uid://oc13h3au02ro"]
+[gd_scene load_steps=58 format=3 uid="uid://oc13h3au02ro"]
 
 [ext_resource type="Script" path="res://scripts/Player_Character/player_character.gd" id="1_dwwa2"]
 [ext_resource type="Script" path="res://scripts/Player_Character/HUD.gd" id="2_beh8p"]
@@ -7,6 +7,8 @@
 [ext_resource type="Texture2D" uid="uid://uidicgaojgdi" path="res://HUD ASSETS/crosshair046.png" id="5_pjba3"]
 [ext_resource type="Material" uid="uid://cmcetn3jo6tdg" path="res://FpsTemplate/glass.tres" id="6_op8x5"]
 [ext_resource type="AnimationLibrary" uid="uid://uybino34n0sj" path="res://FpsTemplate/weapon_animation.res" id="13_lmhsg"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_bu4qy"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_5mxbr"]
 shader = ExtResource("3_w3n5t")
@@ -940,7 +942,7 @@ radius = 0.4
 [sub_resource type="BoxMesh" id="BoxMesh_d6xdl"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_73v4a"]
-radius = 0.45
+radius = 0.243289
 height = 1.7
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_mvomp"]
@@ -969,10 +971,55 @@ metadata/_edit_group_ = true
 unique_name_in_owner = true
 script = ExtResource("2_beh8p")
 
+[node name="Interaction" type="HBoxContainer" parent="Ui"]
+offset_left = 435.0
+offset_top = 262.0
+offset_right = 577.0
+offset_bottom = 285.0
+
+[node name="Label" type="Label" parent="Ui/Interaction"]
+layout_mode = 2
+text = "Press E!"
+
+[node name="CurrentWeapon" type="Label" parent="Ui/Interaction"]
+visible = false
+layout_mode = 2
+
+[node name="Hit_Sight" type="TextureRect" parent="Ui"]
+visible = false
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+texture = ExtResource("5_pjba3")
+stretch_mode = 3
+
+[node name="Hit_Sight_Timer" type="Timer" parent="Ui/Hit_Sight"]
+wait_time = 0.05
+one_shot = true
+
+[node name="Main_Sight" type="TextureRect" parent="Ui"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+texture = ExtResource("4_mk85o")
+stretch_mode = 3
+
+[node name="Black" type="ColorRect" parent="Ui"]
+material = SubResource("ShaderMaterial_bu4qy")
+offset_right = 1600.0
+offset_bottom = 900.0
+color = Color(0, 0, 0, 0)
+
 [node name="BlurVignette" type="ColorRect" parent="Ui"]
 material = SubResource("ShaderMaterial_5mxbr")
-offset_right = 1279.0
-offset_bottom = 720.0
+offset_right = 1600.0
+offset_bottom = 900.0
 
 [node name="Start" type="VBoxContainer" parent="Ui"]
 visible = false
@@ -1045,31 +1092,6 @@ size_flags_horizontal = 3
 min_value = 1.0
 value = 30.0
 
-[node name="Main_Sight" type="TextureRect" parent="Ui"]
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-mouse_filter = 2
-texture = ExtResource("4_mk85o")
-stretch_mode = 3
-
-[node name="Hit_Sight" type="TextureRect" parent="Ui"]
-visible = false
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-mouse_filter = 2
-texture = ExtResource("5_pjba3")
-stretch_mode = 3
-
-[node name="Hit_Sight_Timer" type="Timer" parent="Ui/Hit_Sight"]
-wait_time = 0.05
-one_shot = true
-
 [node name="Sprint_Bar" type="HSlider" parent="Ui"]
 anchors_preset = 7
 anchor_left = 0.5
@@ -1090,20 +1112,6 @@ value = 100.0
 editable = false
 scrollable = false
 
-[node name="Interaction" type="HBoxContainer" parent="Ui"]
-offset_left = 435.0
-offset_top = 262.0
-offset_right = 577.0
-offset_bottom = 285.0
-
-[node name="Label" type="Label" parent="Ui/Interaction"]
-layout_mode = 2
-text = "Press E!"
-
-[node name="CurrentWeapon" type="Label" parent="Ui/Interaction"]
-visible = false
-layout_mode = 2
-
 [node name="Node3D" type="Node3D" parent="."]
 
 [node name="Camera" type="Node3D" parent="."]
@@ -1123,7 +1131,7 @@ callback_mode_method = 1
 libraries = {
 "": SubResource("AnimationLibrary_4yl2r")
 }
-speed_scale = 0.01
+speed_scale = 0.0
 
 [node name="lean_pivot" type="Node3D" parent="Camera"]
 
@@ -1245,10 +1253,10 @@ one_shot = true
 
 [node name="Coyote_Timer" type="Timer" parent="."]
 
+[connection signal="timeout" from="Ui/Hit_Sight/Hit_Sight_Timer" to="Ui" method="_on_hit_sight_timer_timeout"]
 [connection signal="value_changed" from="Ui/Start/MusicVolSlider" to="." method="_on_music_vol_slider_value_changed"]
 [connection signal="value_changed" from="Ui/Start/FxVolSlider" to="." method="_on_fx_vol_slider_value_changed"]
 [connection signal="value_changed" from="Ui/Start/SenSlider" to="." method="_on_sen_slider_value_changed"]
-[connection signal="timeout" from="Ui/Hit_Sight/Hit_Sight_Timer" to="Ui" method="_on_hit_sight_timer_timeout"]
 [connection signal="body_entered" from="pick_up_detection" to="Camera/lean_pivot/MainCamera/Weapons_Manager" method="_on_pick_up_detection_body_entered"]
 [connection signal="timeout" from="Sprint_Timer" to="." method="_on_sprint_timer_timeout"]
 [connection signal="timeout" from="Coyote_Timer" to="." method="_on_coyote_timer_timeout"]

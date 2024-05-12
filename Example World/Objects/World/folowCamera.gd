@@ -8,5 +8,5 @@ func _ready():
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
-	if Input.is_action_pressed("ui_accept"):
-		player.CallCamera(self,10.0,delta)
+	pass
+	#player.CallCamera(self,10.0,delta)

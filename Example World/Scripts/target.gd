@@ -6,7 +6,7 @@ var shader_material
 
 
 @export var Health = 2
-@export var Name = "ALVO"
+@export var Name = "Shroom"
 func Hit_Successful(Damage, _Direction: Vector3 = Vector3.ZERO, _Position: Vector3 = Vector3.ZERO):
 	Health -= Damage
 	if Health <= 0:
