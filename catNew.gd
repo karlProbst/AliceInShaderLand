@@ -60,7 +60,7 @@ func _physics_process(delta):
 		# Animation and rotation
 		if velocity.length() > 0.01:
 			var speed_scale = current_speed / max_speed  # Calculate speed scale
-			switch_animation("ArmatureAction", speed_scale)
+			switch_animation("Run", speed_scale)
 			var actual_direction = Vector3(velocity.x, 0, velocity.z).normalized()
 			var flat_current = Vector3(global_transform.basis.z.x, 0, global_transform.basis.z.z).normalized()
 			var rotation_angle = flat_current.angle_to(actual_direction)
@@ -72,12 +72,12 @@ func _physics_process(delta):
 				rotation_angle -= PI / 2
 				global_transform.basis = global_transform.basis.rotated(rotation_axis, rotation_angle * rotation_speed * delta)
 		else:
-			switch_animation("referenceAction", 1.0)
+			switch_animation("Idle", 1.0)
 
 func switch_animation(animation_name: String, speed_scale: float):
 	if anim_player.current_animation != animation_name or anim_player.speed_scale != speed_scale:
 		anim_player.play(animation_name)
-		anim_player.speed_scale = speed_scale
+		anim_player.speed_scale = speed_scale*4.0
 
 func Touching():
 	# Define what happens when the cat touches or is very close to the player

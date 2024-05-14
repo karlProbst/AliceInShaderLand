@@ -12,8 +12,7 @@ signal Connect_Weapon_To_HUD
 @export var Melee_Hitbox: ShapeCast3D
 @onready var Bullet_Point = get_node("%BulletPoint")
 @onready var Debug_Bullet = preload("res://FpsTemplate/Spawnable_Objects/hit_debug.tscn")
-
-var Melee_Shake:= Vector3(0,0,2.5)
+@onready var player = get_tree().root.get_node("World/Player_Character")
 var Melee_Shake_Magnetude:= Vector4(1,1,1,1)
 
 var Current_Weapon: Weapon_Resource = null
@@ -167,11 +166,17 @@ func melee():
 			var colliders = Melee_Hitbox.get_collision_count()
 			for c in colliders:
 				var Target = Melee_Hitbox.get_collider(c)
-				if Target.is_in_group("Target") and Target.has_method("Hit_Successful"):
-					Hit_Successfull.emit()
-					var Direction = (Target.global_transform.origin - owner.global_transform.origin).normalized()
-					var Position =  Melee_Hitbox.get_collision_point(c)
-					Target.Hit_Successful(Current_Weapon.Melee_Damage, Direction, Position)
+				if Target.is_in_group("Interactible"):
+					if Target.has_method("PlayAction"):
+						Target.PlayAction()
+					if Target.Name=="Shroom":
+						player.chapadao+=25.0
+					print("YWEAH")
+				#if Target.is_in_group("Target") and Target.has_method("Hit_Successful")and 1==2:
+				#	Hit_Successfull.emit()
+				#	var Direction = (Target.global_transform.origin - owner.global_transform.origin).normalized()
+				#	var Position =  Melee_Hitbox.get_collision_point(c)
+				#	Target.Hit_Successful(Current_Weapon.Melee_Damage, Direction, Position)
 			
 func drop(_name: String):
 	if Weapons_List[_name].Can_Be_Dropped and WeaponStack.size() != 1:

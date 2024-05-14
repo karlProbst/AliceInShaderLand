@@ -11,7 +11,7 @@ func _ready():
 				if emission_material == null:
 					emission_material = StandardMaterial3D.new()
 					child.set_surface_override_material(1, emission_material)
-				var random_color = Color(randf()*5, randf()*5, randf()*5)
+				var random_color = Color(randf(), randf(), randf())
 				
 				
 				var r = randf_range(0.0,100.0)

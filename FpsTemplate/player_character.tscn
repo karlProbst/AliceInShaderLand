@@ -1,4 +1,4 @@
-[gd_scene load_steps=60 format=3 uid="uid://oc13h3au02ro"]
+[gd_scene load_steps=64 format=3 uid="uid://oc13h3au02ro"]
 
 [ext_resource type="Script" path="res://scripts/Player_Character/player_character.gd" id="1_dwwa2"]
 [ext_resource type="Script" path="res://scripts/Player_Character/HUD.gd" id="2_beh8p"]
@@ -6,6 +6,9 @@
 [ext_resource type="Texture2D" uid="uid://bjh5ic6qy4jtl" path="res://HUD ASSETS/crosshair001.png" id="4_mk85o"]
 [ext_resource type="Texture2D" uid="uid://uidicgaojgdi" path="res://HUD ASSETS/crosshair046.png" id="5_pjba3"]
 [ext_resource type="Material" uid="uid://cmcetn3jo6tdg" path="res://FpsTemplate/glass.tres" id="6_op8x5"]
+[ext_resource type="Script" path="res://scripts/Weapon_State_Machine/Weapon_State_Machine.gd" id="7_51pe1"]
+[ext_resource type="Script" path="res://scripts/Weapon_State_Machine/weapon_resource.gd" id="8_d5nke"]
+[ext_resource type="PackedScene" uid="uid://dc48o4niy1mok" path="res://FpsTemplate/Spawnable_Objects/Projectiles_To_Load/basic_hitscan_projectile.tscn" id="8_i0c22"]
 [ext_resource type="AnimationLibrary" uid="uid://uybino34n0sj" path="res://FpsTemplate/weapon_animation.res" id="13_lmhsg"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_bu4qy"]
@@ -110,6 +113,28 @@ tracks/0/keys = {
 _data = {
 "offset": SubResource("Animation_reudm")
 }
+
+[sub_resource type="Resource" id="Resource_wlo7m"]
+script = ExtResource("8_d5nke")
+Weapon_Name = "blaster1"
+Pick_Up_Anim = "Global/blasterI Active"
+Shoot_Anim = "Global/blasterI Shoot"
+Reload_Anim = "Global/blasterI Reload"
+Change_Anim = "Global/blasterI De-Activate"
+Drop_Anim = "Global/blasterI Drop"
+Out_Of_Ammo_Anim = "Global/blasterI OOA"
+Melee_Anim = "Global/blasterI Melee"
+Current_Ammo = 999999
+Reserve_Ammo = 60
+Magazine = 999999
+Max_Ammo = 9999999
+Damage = 2
+Melee_Damage = 0.5
+AutoFire = false
+Fire_Range = 2
+Can_Be_Dropped = false
+Projectile_To_Load = ExtResource("8_i0c22")
+Incremental_Reload = false
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_0fswt"]
 resource_name = "dark"
@@ -1200,11 +1225,16 @@ current = true
 fov = 88.0
 near = 0.001
 
-[node name="Weapons_Manager" type="Node3D" parent="Camera/lean_pivot/MainCamera"]
-visible = false
+[node name="Weapons_Manager" type="Node3D" parent="Camera/lean_pivot/MainCamera" node_paths=PackedStringArray("Animation_Player", "Melee_Hitbox")]
+script = ExtResource("7_51pe1")
+Animation_Player = NodePath("Weapons_Models/AnimationPlayer")
+Melee_Hitbox = NodePath("Melee_Hitbox")
+_weapon_resources = Array[ExtResource("8_d5nke")]([SubResource("Resource_wlo7m")])
+Start_Weapons = Array[String](["blaster1"])
 
 [node name="Weapons_Models" type="Node3D" parent="Camera/lean_pivot/MainCamera/Weapons_Manager"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.54919, 0)
+visible = false
 
 [node name="blasterN" type="Node3D" parent="Camera/lean_pivot/MainCamera/Weapons_Manager/Weapons_Models"]
 transform = Transform3D(-1, 0, 2.53518e-06, 0, 1, 0, -2.53518e-06, 0, -1, 0.193, 1.255, -0.643)
