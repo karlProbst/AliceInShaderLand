@@ -1,0 +1,13 @@
+~ Start
+
+Gato: [[Hi|Hello|Howdy]], this is some dialogue.
+Gato: Here are some choices.
+- First one
+	Gato: You picked the first one.
+- Second one
+	Gato: You picked the second one.
+- Start again => Start
+- End the conversation => END
+Gato: For more information see the online documentation.
+
+=> END
