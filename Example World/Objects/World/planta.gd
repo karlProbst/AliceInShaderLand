@@ -3,6 +3,9 @@ extends StaticBody3D
 var needsWater=true
 
 @onready var shader_code = load("res://Example World/Objects/World/High.gdshader")
+@onready var green_texture = load("res://Textures/plant_green.png")
+@onready var mid_texture = load("res://Textures/plant_mid.png")
+@onready var dead_texture = load("res://Textures/plant_dead.png")
 var coin_scene = preload("res://Assets 3d/Coin.tscn")
 var shader_material
 @export var Name = "Bed"
@@ -21,9 +24,10 @@ func watering():
 				child.material_override = material
 			# Generate a random color
 			var d = 0.8
-			var random_color = Color(randf()/d, 1.0, randf()/d)
+			var random_color = Color(randf()/d, 1.2, randf()/d)
 			# Set the albedo color
 			material.albedo_color = random_color
+			material.albedo_texture=green_texture
 	spawn_coins(19,player.global_transform.origin)
 func PlayAction():
 	if has_node("AnimationPlayer"):

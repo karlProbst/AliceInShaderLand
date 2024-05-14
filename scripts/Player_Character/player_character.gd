@@ -77,12 +77,15 @@ var stuck = 0
 var chapadao = 0
 var money = 0
 var catHipnose=0
+var ChangeFovSet=90
+var defaultFov=0
+var scale_var_default=0
 func _ready():
-
+	defaultFov = $Camera/lean_pivot/MainCamera.fov
 	$Camera/glassass.mesh.material.set_shader_parameter("distortion_size",0)
 	$Camera/glassass/AnimationPlayer.play("offset")
 	scale_var=scale
-
+	scale_var_default=scale_var
 	Update_CameraRotation()
 	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
 	Calculate_Movement_Parameters()
@@ -133,6 +136,8 @@ func _input(event):
 		if Input.is_action_just_pressed("lean_left"):
 			if scale_var.x>0.1:
 				
+				ChangeFovSet=88+(1-scale_var.x)*15
+			#$Camera/lean_pivot/MainCamera.fov=88+(1-scale_var.x)*15
 				self.scale/=2
 				scale_var/=2
 				Jump_Height=scale_var.x/200
@@ -172,8 +177,12 @@ func Calculate_Movement_Parameters()->void:
 	Speed = Jump_Distance/(Jump_Peak_Time+Jump_Fall_Time)
 	_speed = Speed
 
-
-
+func setFov(target_fov):
+	$Camera/lean_pivot/MainCamera.fov = target_fov
+func ChangeFov(target_fov,delta):
+	$Camera/lean_pivot/MainCamera.fov=lerp($Camera/lean_pivot/MainCamera.fov,target_fov*1.01,delta)
+	if $Camera/lean_pivot/MainCamera.fov == target_fov:
+		return true
 	
 func exit_sprint():
 	if !Sprint_Timer.is_stopped():
@@ -258,26 +267,44 @@ func Camera_eye(delta):
 
 
 func _physics_process(delta):
+	#lerp fov until target
+	if ChangeFovSet!=0:
+		if ChangeFov(ChangeFovSet,delta):
+			ChangeFovSet=0
+			
 	if catHipnose>0:
-		CallCamera(cat,delta,10.0,10.0)
-		cat.global_position=Vector3(0.277,3.368,12.064)
-		self.global_position=Vector3(-1.722,3.368,12.064)
-		$Camera/lean_pivot/MainCamera.fov=lerp($Camera/lean_pivot/MainCamera.fov,30.0,delta)
-		cat.stuck=true
-		catHipnose-=delta
 		
+		catHipnose-=delta
+		CallCamera(cat,delta,1.0,10.0)
+		cat.global_position=Vector3(0.277,3.5,12.064)
+		self.global_position=Vector3(-1.722,3.6,12.064)
+		scale_var=scale_var_default/3
+		ChangeFovSet=30
+		cat.stuck=true
+		chapadao+=1
+		cat.set_emission_energy_on()
+		ChangeFovSet=30
+		
+		if catHipnose<2:
+			cat.set_emission_energy_off()
+			ChangeFovSet=defaultFov
+		if catHipnose<0.2:
+			fade()
+			self.global_position=Vector3(-0.1,3.5,13.72)
+			scale_var=scale_var_default
+			
 	if stuck>0:
 		stuck-=delta
 		if chapadao>0:
-			CallCamera(pot,delta,5.0,50.0)
+			CallCamera(pot,delta,1.0,50.0)
 	
 	isInteractive=null
 	Camera_eye(delta)
-	if(chapadao>0):
+	if(chapadao>0.1):
 		add_audio_effect(AudioServer.get_bus_index("Music"), 6,chapadao)
 		var d = $Camera/glassass.mesh.material.get_shader_parameter("distortion_size")
 		if(d<chapadao):
-			d+=delta/20
+			d+=delta/40
 		else:
 			d=lerp(d,0.0,delta)
 		
@@ -294,9 +321,12 @@ func _physics_process(delta):
 		saturation_anim.seek(0)
 		#world_env.brightness = 1
 		#world_env.contrast =1
+		
 	
 		remove_all_audio_effects(AudioServer.get_bus_index("Music"))
 		$Camera/glassass.mesh.material.set_shader_parameter("distortion_size",0)
+	
+	
 	#if(hit_location!=Vector3.ZERO):
 	#	var distance_to_hit = global_transform.origin.distance_to(hit_location)
 	#	print(distance_to_hit)
@@ -334,7 +364,8 @@ func _physics_process(delta):
 			Jump_Available = true
 			coyote_timer.stop()
 			_speed = (Speed / Speed_Modifier*scale_var.x)
-			$Camera/lean_pivot/MainCamera.fov=88+(1-scale_var.x)*15
+
+			
 			if Jump_Buffer:
 				Jump()
 				Jump_Buffer = false
@@ -421,20 +452,10 @@ func CameraLook(Movement: Vector2):
 	CameraRotation.y = clamp(CameraRotation.y,-1.5,1.2)
 	
 
-func CallCamera2(node, delta, speed):
-	var target_dir = (node.global_transform.origin - global_transform.origin).normalized()
-	var target_rot = Basis().looking_at(target_dir, Vector3(0, 1, 0))
-	global_transform.basis = global_transform.basis.slerp(target_rot, speed * delta)
 
-	var rotation = self.global_transform.basis.get_euler()
 
-	# Extract yaw and pitch angles from the rotation
-	var yaw = 0
-	var pitch = rotation.x
 
-	# Set CameraRotation to the extracted angles
-	CameraRotation = Vector2(yaw, pitch)
-	Update_CameraRotation()
+
 	
 func CallCamera(target_node: Node, delta: float, base_speed: float, max_rotation_speed: float = 0.1):
 	# Get the target node's global position
@@ -450,7 +471,8 @@ func CallCamera(target_node: Node, delta: float, base_speed: float, max_rotation
 	# Calculate the angle between player's forward direction and direction to target
 	var angle_to_target = atan2(direction_to_target.z, denominator) - atan2(player_forward.z, player_forward.x)
 	# Smoothly rotate towards the angle to the target
-	CameraLook(Vector2(angle_to_target / base_speed, 0))
+	var rotationy = Camera.rotation.x/10.0
+	CameraLook(Vector2(angle_to_target / base_speed, rotationy/ base_speed))
 
 func fade():
 	$Ui/Black/AnimationPlayer.stop()

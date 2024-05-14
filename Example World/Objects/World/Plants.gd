@@ -1,5 +1,7 @@
 extends Node3D
-
+@onready var green_texture = load("res://Textures/plant_green.png")
+@onready var mid_texture = load("res://Textures/plant_mid.png")
+@onready var dead_texture = load("res://Textures/plant_dead.png")
 func _ready():
 	resetPlants()
 func resetPlants():
@@ -15,9 +17,10 @@ func resetPlants():
 					# Create a new StandardMaterial3D if none is attached
 					material = StandardMaterial3D.new()
 					child.material_override = material
+					
 				# Generate a random color
 				var d = 0.8
-				var random_color = Color(randf()/d, 1.5, randf()/d)
+				var random_color = Color(randf()/d, 1.0, randf()/d)
 				# Set the albedo color
 				material.albedo_color = random_color
-	
+				material.albedo_texture=dead_texture

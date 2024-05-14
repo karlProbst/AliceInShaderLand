@@ -18,6 +18,7 @@ func PlayAction():
 		rootNode.time_of_day=22.0
 		player.stuck=7.0
 		plants.resetPlants()
+		player.setFov(35)
 		player.catHipnose=7.0
 	
 func set_shader():

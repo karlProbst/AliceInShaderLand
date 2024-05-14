@@ -20,13 +20,15 @@ var stuck = false
 @onready var raycast: RayCast3D = $RayCast3D
 @onready var anim_player: AnimationPlayer = $AnimationPlayer
 
+var adkd=0
 func _physics_process(delta):
+
 	if target:
 		var target_position = target.global_transform.origin
 		var distance_to_target = global_transform.origin.distance_to(target_position)
 		var direction = (target_position - global_transform.origin).normalized()
 		var flat_direction = Vector3(direction.x, 0, direction.z).normalized()
-
+	
 		if distance_to_target < stop_radius:
 			Touching()
 			switch_animation("Idle", 1.0)
@@ -69,29 +71,36 @@ func _physics_process(delta):
 			stuck=false
 		else:
 			switch_animation("Idle2", 1.0)
-		print(velocity.length())
+			rotateCat(delta)
 		# Animation and rotation
-		if velocity.length() > 0.1:
+		if velocity.length() > 0.1 and not stuck:
 			
 			var speed_scale = current_speed / max_speed  # Calculate speed scale
 			switch_animation("Run", speed_scale)
-			var actual_direction = Vector3(velocity.x, 0, velocity.z).normalized()
-			var flat_current = Vector3(global_transform.basis.z.x, 0, global_transform.basis.z.z).normalized()
-			var rotation_angle = flat_current.angle_to(actual_direction)
-
-			if rotation_angle > 0.001 or rotation_angle < -0.001:
-				var rotation_axis = Vector3.UP
-				if flat_current.cross(actual_direction).y < 0:
-					rotation_angle = -rotation_angle
-				rotation_angle -= PI / 2
-				global_transform.basis = global_transform.basis.rotated(rotation_axis, rotation_angle * rotation_speed * delta)
+			rotateCat(delta)
 		else:
-			switch_animation("Idle", 1.0)
+			if not stuck:
+				switch_animation("Idle", 1.0)
 func switch_animation(animation_name: String, speed_scale: float):
 	if anim_player.current_animation != animation_name or anim_player.speed_scale != speed_scale:
 		anim_player.play(animation_name)
 		anim_player.speed_scale = speed_scale*4.0
+func rotateCat(delta):
+	var actual_direction = Vector3(velocity.x, 0, velocity.z).normalized()
+	var flat_current = Vector3(global_transform.basis.z.x, 0, global_transform.basis.z.z).normalized()
+	var rotation_angle = flat_current.angle_to(actual_direction)
 
+	if rotation_angle > 0.001 or rotation_angle < -0.001:
+		var rotation_axis = Vector3.UP
+		if flat_current.cross(actual_direction).y < 0:
+			rotation_angle = -rotation_angle
+		rotation_angle -= PI / 2
+		global_transform.basis = global_transform.basis.rotated(rotation_axis, rotation_angle * rotation_speed * delta)
 func Touching():
-	# Define what happens when the cat touches or is very close to the player
 	pass
+func set_emission_energy_on():
+	var anim = $Armature/Skeleton3D/mesh_cat/AnimationPlayer
+	anim.play("glow")
+func set_emission_energy_off():
+	var anim = $Armature/Skeleton3D/mesh_cat/AnimationPlayer
+	anim.play("off")
