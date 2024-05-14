@@ -59,9 +59,11 @@ var Speed_Modifier: float = NORMAL_SPEED
 @export var Coyote_Time: float = .1
 @export var Jump_Buffer_Time: float = .2
 @onready var coyote_timer: Timer = $Coyote_Timer
-@onready var saturation_anim = get_node("../WorldEnvironment/AnimationPlayer")
+@onready var saturation_anim = get_node("../WorldEnvironment/Chapadao")
 @onready var eye = get_node("../Eye")
-
+@onready var pot = null
+@onready var fx_drink = get_node("fx_drink")
+@onready var cat = get_node("../cat")
 # Get the gravity from the project settings to be synced with RigidBody nodes.
 var Jump_Gravity = ProjectSettings.get_setting("physics/3d/default_gravity")
 var Fall_Gravity: float
@@ -71,8 +73,10 @@ var Jump_Available: bool = true
 var Jump_Buffer: bool = false
 var hit_location = Vector3.ZERO
 var scale_var
-
+var stuck = 0
 var chapadao = 0
+var money = 0
+var catHipnose=0
 func _ready():
 
 	$Camera/glassass.mesh.material.set_shader_parameter("distortion_size",0)
@@ -137,13 +141,16 @@ func _input(event):
 			
 		if Input.is_action_just_pressed("lean_right"):
 			if isInteractive:
-				print("node:", isInteractive.Name)
+				
 				
 				if isInteractive.has_method("PlayAction"):
 					isInteractive.PlayAction()
-					if isInteractive.Name=="Shroom":
+					if isInteractive.Name=="Shroom" and stuck<=0:
+						stuck=1.5
+						pot=isInteractive
+						fx_drink.play()
 						chapadao+=25.0
-					print("LJJLDJKD")
+					
 			
 		if Input.is_action_just_released("sprint") or Input.is_action_just_released("walk"):
 			if !(Input.is_action_pressed("walk") or Input.is_action_pressed("sprint")):
@@ -205,10 +212,14 @@ func ShowInteraction(isInteractible,node,hitLocation):
 	if(isInteractible):
 		isInteractive=node
 		hit_location=hitLocation
-		meshnode = node.get_child(0)
-		int_node_array.append(meshnode)
-		meshnode.material_overlay = ShaderMaterial.new()
-		meshnode.material_overlay.shader = shader_code
+		
+		for child in node.get_children():
+			if child is MeshInstance3D:
+				meshnode = child
+		if meshnode is MeshInstance3D:		
+			int_node_array.append(meshnode)
+			meshnode.material_overlay = ShaderMaterial.new()
+			meshnode.material_overlay.shader = shader_code
 		
 	else:
 		for i in int_node_array:
@@ -247,6 +258,20 @@ func Camera_eye(delta):
 
 
 func _physics_process(delta):
+	if catHipnose>0:
+		CallCamera(cat,delta,10.0,10.0)
+		cat.global_position=Vector3(0.277,3.368,12.064)
+		self.global_position=Vector3(-1.722,3.368,12.064)
+		$Camera/lean_pivot/MainCamera.fov=lerp($Camera/lean_pivot/MainCamera.fov,30.0,delta)
+		cat.stuck=true
+		catHipnose-=delta
+		
+	if stuck>0:
+		stuck-=delta
+		if chapadao>0:
+			CallCamera(pot,delta,5.0,50.0)
+	
+	isInteractive=null
 	Camera_eye(delta)
 	if(chapadao>0):
 		add_audio_effect(AudioServer.get_bus_index("Music"), 6,chapadao)
@@ -263,7 +288,7 @@ func _physics_process(delta):
 		saturation_anim.seek(d*6)
 
 		$Camera/glassass.mesh.material.set_shader_parameter("distortion_size",d)
-		chapadao=lerp(chapadao,0.0,delta)
+		chapadao=lerp(chapadao,0.0,delta/4)
 		
 	else:
 		saturation_anim.seek(0)
@@ -281,7 +306,9 @@ func _physics_process(delta):
 
 	if(!paused):
 		if rayInt.is_colliding():
+			
 			var collision = rayInt.get_collider()
+			
 			if collision.is_in_group("Interactible"):
 				
 				ShowInteraction(true,collision,rayInt.get_collision_point())
@@ -327,8 +354,8 @@ func _physics_process(delta):
 
 		velocity.x = move_toward(velocity.x, direction.x * _speed, Speed)
 		velocity.z = move_toward(velocity.z, direction.z * _speed, Speed)
-		
-		move_and_slide()
+		if(stuck<=0):
+			move_and_slide()
 
 func Jump()->void:
 	velocity.y = Jump_Velocity
@@ -423,7 +450,7 @@ func CallCamera(target_node: Node, delta: float, base_speed: float, max_rotation
 	# Calculate the angle between player's forward direction and direction to target
 	var angle_to_target = atan2(direction_to_target.z, denominator) - atan2(player_forward.z, player_forward.x)
 	# Smoothly rotate towards the angle to the target
-	CameraLook(Vector2(angle_to_target / 10, 0))
+	CameraLook(Vector2(angle_to_target / base_speed, 0))
 
 func fade():
 	$Ui/Black/AnimationPlayer.stop()

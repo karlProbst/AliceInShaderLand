@@ -12,6 +12,8 @@ var is_stuck: bool = false  # Flag to check if the cat is stuck
 var random_run_duration: float = 0.0  # Duration for running in a random direction
 var low_velocity_timer = 0.0
 var spd =  0
+var idle_sit_timer = 0.0
+var stuck = false
 @onready var target: Node = get_parent().get_node("Player_Character")
 @onready var raycastr: RayCast3D = $RayCast3DR
 @onready var raycastl: RayCast3D = $RayCast3DL
@@ -28,8 +30,15 @@ func _physics_process(delta):
 		if distance_to_target < stop_radius:
 			Touching()
 			switch_animation("Idle", 1.0)
+			idle_sit_timer+=delta
+		
+			if idle_sit_timer>3.0:
+				switch_animation("Idle2", 1.0)
+			else:
+				switch_animation("Idle", 1.0)
 			return  # Stop processing if within stop radius
-
+		else:
+			idle_sit_timer=0.0
 		raycast.force_raycast_update()
 		var move_direction = flat_direction
 		var avoidance_force = Vector3.ZERO
@@ -55,10 +64,15 @@ func _physics_process(delta):
 		velocity.x = move_direction.x * current_speed 
 		velocity.z = move_direction.z * current_speed
 		velocity.y += gravity * delta
-		move_and_slide()
-
+		if !stuck:
+			move_and_slide()
+			stuck=false
+		else:
+			switch_animation("Idle2", 1.0)
+		print(velocity.length())
 		# Animation and rotation
-		if velocity.length() > 0.01:
+		if velocity.length() > 0.1:
+			
 			var speed_scale = current_speed / max_speed  # Calculate speed scale
 			switch_animation("Run", speed_scale)
 			var actual_direction = Vector3(velocity.x, 0, velocity.z).normalized()
@@ -73,7 +87,6 @@ func _physics_process(delta):
 				global_transform.basis = global_transform.basis.rotated(rotation_axis, rotation_angle * rotation_speed * delta)
 		else:
 			switch_animation("Idle", 1.0)
-
 func switch_animation(animation_name: String, speed_scale: float):
 	if anim_player.current_animation != animation_name or anim_player.speed_scale != speed_scale:
 		anim_player.play(animation_name)

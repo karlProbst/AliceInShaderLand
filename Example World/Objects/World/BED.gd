@@ -5,15 +5,21 @@ var shader_material
 @export var Name = "Bed"
 @onready var player = get_tree().get_root().get_node("World/Player_Character")
 @onready var ap = get_tree().get_root().get_node("World/AP")
-
+@onready var rootNode = get_tree().get_root().get_node("World")
+@onready var plants = get_tree().get_root().get_node("World/AP/Plants")
 func PlayAction():
-	print("JFKjlkdlkjLFLEDJFDJFLKDJFL")
-	if has_node("AnimationPlayer"):
-		$AnimationPlayer.play("ANIM")
-	set_shader()
+	if player.catHipnose<=0:
+		print("JFKjlkdlkjLFLEDJFDJFLKDJFL")
+		if has_node("AnimationPlayer"):
+			$AnimationPlayer.play("ANIM")
+		set_shader()
+		player.fade()
+		ap.Recolor()
+		rootNode.time_of_day=22.0
+		player.stuck=7.0
+		plants.resetPlants()
+		player.catHipnose=7.0
 	
-	player.fade()
-	ap.Recolor()
 func set_shader():
 	var mesh_instance = $Mesh
 

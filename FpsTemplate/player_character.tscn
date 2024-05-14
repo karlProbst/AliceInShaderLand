@@ -131,7 +131,7 @@ Max_Ammo = 9999999
 Damage = 2
 Melee_Damage = 0.5
 AutoFire = false
-Fire_Range = 2
+Fire_Range = 3
 Can_Be_Dropped = false
 Projectile_To_Load = ExtResource("8_i0c22")
 Incremental_Reload = false
@@ -1062,6 +1062,19 @@ text = "Press E!"
 visible = false
 layout_mode = 2
 
+[node name="Coins" type="HBoxContainer" parent="Ui"]
+offset_left = 24.0
+offset_top = 846.0
+offset_right = 166.0
+offset_bottom = 869.0
+
+[node name="Money" type="Label" parent="Ui/Coins"]
+layout_mode = 2
+text = "Money: "
+
+[node name="CurrentMoney" type="Label" parent="Ui/Coins"]
+layout_mode = 2
+
 [node name="Hit_Sight" type="TextureRect" parent="Ui"]
 visible = false
 anchors_preset = 15
@@ -1303,7 +1316,7 @@ shape = SubResource("SphereShape3D_24b8y")
 target_position = Vector3(0.85, 0, 0)
 collision_mask = 5
 
-[node name="RayInt" type="RayCast3D" parent="Camera"]
+[node name="RayInt" type="RayCast3D" parent="Camera" groups=["Ray"]]
 transform = Transform3D(1, 0, 0, 0, -6.46066e-08, -1, 0, 1.47803, -4.37114e-08, 0, -0.0996211, -0.10757)
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Camera/RayInt"]
