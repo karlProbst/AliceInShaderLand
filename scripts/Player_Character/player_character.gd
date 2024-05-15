@@ -64,6 +64,7 @@ var Speed_Modifier: float = NORMAL_SPEED
 @onready var pot = null
 @onready var fx_drink = get_node("fx_drink")
 @onready var cat = get_node("../cat")
+@onready var rootNode = get_tree().get_root().get_node("World")
 # Get the gravity from the project settings to be synced with RigidBody nodes.
 var Jump_Gravity = ProjectSettings.get_setting("physics/3d/default_gravity")
 var Fall_Gravity: float
@@ -80,6 +81,13 @@ var catHipnose=0
 var ChangeFovSet=90
 var defaultFov=0
 var scale_var_default=0
+var hasRegador=false
+var water=0
+var waterMax=4
+@onready var regador = $Camera/lean_pivot/MainCamera/Weapons_Manager/Regador 
+
+func refillWater():
+	water=waterMax
 func _ready():
 	defaultFov = $Camera/lean_pivot/MainCamera.fov
 	$Camera/glassass.mesh.material.set_shader_parameter("distortion_size",0)
@@ -150,11 +158,12 @@ func _input(event):
 				
 				if isInteractive.has_method("PlayAction"):
 					isInteractive.PlayAction()
-					if isInteractive.Name=="Shroom" and stuck<=0:
-						stuck=1.5
-						pot=isInteractive
-						fx_drink.play()
-						chapadao+=25.0
+					if isInteractive:
+						if isInteractive.Name=="Shroom" and stuck<=0:
+							stuck=1.5
+							pot=isInteractive
+							fx_drink.play()
+							chapadao+=110.0
 					
 			
 		if Input.is_action_just_released("sprint") or Input.is_action_just_released("walk"):
@@ -267,6 +276,10 @@ func Camera_eye(delta):
 
 
 func _physics_process(delta):
+	if hasRegador:
+		regador.visible=true
+	else:
+		regador.visible=false
 	#lerp fov until target
 	if ChangeFovSet!=0:
 		if ChangeFov(ChangeFovSet,delta):
@@ -281,7 +294,6 @@ func _physics_process(delta):
 		scale_var=scale_var_default/3
 		ChangeFovSet=30
 		cat.stuck=true
-		chapadao+=1
 		cat.set_emission_energy_on()
 		ChangeFovSet=30
 		
@@ -289,6 +301,7 @@ func _physics_process(delta):
 			cat.set_emission_energy_off()
 			ChangeFovSet=defaultFov
 		if catHipnose<0.2:
+			rootNode.time_of_day=6.5
 			fade()
 			self.global_position=Vector3(-0.1,3.5,13.72)
 			scale_var=scale_var_default
@@ -300,11 +313,11 @@ func _physics_process(delta):
 	
 	isInteractive=null
 	Camera_eye(delta)
-	if(chapadao>0.1):
+	if(chapadao>0.01):
 		add_audio_effect(AudioServer.get_bus_index("Music"), 6,chapadao)
 		var d = $Camera/glassass.mesh.material.get_shader_parameter("distortion_size")
 		if(d<chapadao):
-			d+=delta/40
+			d+=delta/2
 		else:
 			d=lerp(d,0.0,delta)
 		
@@ -478,7 +491,9 @@ func fade():
 	$Ui/Black/AnimationPlayer.stop()
 	$Ui/Black/AnimationPlayer.play("new_animation")
 
-
+func Regar():
+	water-=1
+	regador.get_node("AnimationPlayer").play("Regando")
 
 
 

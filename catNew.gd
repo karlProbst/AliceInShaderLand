@@ -18,7 +18,7 @@ var stuck = false
 @onready var raycastr: RayCast3D = $RayCast3DR
 @onready var raycastl: RayCast3D = $RayCast3DL
 @onready var raycast: RayCast3D = $RayCast3D
-@onready var anim_player: AnimationPlayer = $AnimationPlayer
+@onready var anim_player: AnimationPlayer = $cat/AnimationPlayer
 
 var adkd=0
 func _physics_process(delta):
@@ -31,16 +31,15 @@ func _physics_process(delta):
 	
 		if distance_to_target < stop_radius:
 			Touching()
-			switch_animation("Idle", 1.0)
 			idle_sit_timer+=delta
-		
+			
 			if idle_sit_timer>3.0:
 				switch_animation("Idle2", 1.0)
 			else:
 				switch_animation("Idle", 1.0)
-			return  # Stop processing if within stop radius
-		else:
-			idle_sit_timer=0.0
+			return	
+		
+			
 		raycast.force_raycast_update()
 		var move_direction = flat_direction
 		var avoidance_force = Vector3.ZERO
@@ -76,15 +75,17 @@ func _physics_process(delta):
 		if velocity.length() > 0.1 and not stuck:
 			
 			var speed_scale = current_speed / max_speed  # Calculate speed scale
-			switch_animation("Run", speed_scale)
-			rotateCat(delta)
+			switch_animation("Run", speed_scale*5.0)
+			idle_sit_timer=0.0
+			rotateCat(delta*2)
 		else:
 			if not stuck:
 				switch_animation("Idle", 1.0)
 func switch_animation(animation_name: String, speed_scale: float):
+	print(animation_name)
 	if anim_player.current_animation != animation_name or anim_player.speed_scale != speed_scale:
 		anim_player.play(animation_name)
-		anim_player.speed_scale = speed_scale*4.0
+		anim_player.speed_scale = speed_scale
 func rotateCat(delta):
 	var actual_direction = Vector3(velocity.x, 0, velocity.z).normalized()
 	var flat_current = Vector3(global_transform.basis.z.x, 0, global_transform.basis.z.z).normalized()
@@ -99,8 +100,8 @@ func rotateCat(delta):
 func Touching():
 	pass
 func set_emission_energy_on():
-	var anim = $Armature/Skeleton3D/mesh_cat/AnimationPlayer
+	var anim = $cat/cat/AnimationPlayer
 	anim.play("glow")
 func set_emission_energy_off():
-	var anim = $Armature/Skeleton3D/mesh_cat/AnimationPlayer
+	var anim = $cat/Armature/Skeleton3D/mesh_cat/AnimationPlayer
 	anim.play("off")

@@ -19,6 +19,10 @@ config/icon="res://Textures/Title.png"
 
 DialogueManager="*res://addons/dialogue_manager/dialogue_manager.gd"
 
+[dialogue_manager]
+
+general/balloon_path="res://Dialog/balloon.tscn"
+
 [display]
 
 window/size/viewport_width=1280

@@ -8,7 +8,6 @@ extends CanvasLayer
 @onready var Hit_Sight_Timer = $Hit_Sight/Hit_Sight_Timer
 @onready var OverLay = $Overlay
 
-
 func _on_weapons_manager_update_weapon_stack(WeaponStack):
 	pass
 	#CurrentWeaponStack.text = ""

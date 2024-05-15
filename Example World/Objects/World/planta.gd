@@ -30,11 +30,13 @@ func watering():
 			material.albedo_texture=green_texture
 	spawn_coins(19,player.global_transform.origin)
 func PlayAction():
-	if has_node("AnimationPlayer"):
-		$AnimationPlayer.play("ANIM")
-	if needsWater:
-		set_shader()
-		watering()
+	if player.hasRegador and player.water>0:
+		if has_node("AnimationPlayer"):
+			$AnimationPlayer.play("ANIM")
+		if needsWater:
+			player.Regar()
+			set_shader()
+			watering()
 func set_shader():
 	var mesh_instance = $Mesh
 

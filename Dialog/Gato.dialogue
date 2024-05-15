@@ -1,12 +1,12 @@
-~ Start
+~ start
 
-Gato: [[Hi|Hello|Howdy]], this is some dialogue.
-Gato: Here are some choices.
-- First one
-	Gato: You picked the first one.
+Gato: Olá humano.
+Gato: Se você pretende cuidar das plantas a primeira coisa que precisa é de um regador.
+- É pra ja!
+	Gato: É pra ja!.
 - Second one
-	Gato: You picked the second one.
-- Start again => Start
+	Gato: Onde está?.
+- Start again => start
 - End the conversation => END
 Gato: For more information see the online documentation.
 

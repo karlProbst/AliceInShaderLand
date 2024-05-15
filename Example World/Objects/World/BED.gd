@@ -20,7 +20,7 @@ func PlayAction():
 		plants.resetPlants()
 		player.setFov(35)
 		player.catHipnose=7.0
-	
+		
 func set_shader():
 	var mesh_instance = $Mesh
 

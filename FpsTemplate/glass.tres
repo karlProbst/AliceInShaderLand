@@ -4,12 +4,12 @@
 
 [sub_resource type="Gradient" id="Gradient_0p3ty"]
 offsets = PackedFloat32Array(0.00306748, 0.418546, 0.759399, 0.993865)
-colors = PackedColorArray(1, 0, 0, 0.733333, 0, 0.352941, 1, 0.729412, 1, 0.403922, 0.219608, 0.596078, 0.219608, 0.678431, 0.286275, 0.729412)
+colors = PackedColorArray(0.913725, 0.454902, 0.352941, 0.733333, 0.262745, 0.294118, 0.533333, 0.427451, 0.490196, 0.682353, 0.419608, 0.741176, 0.333333, 0.690196, 0.772549, 0.462745)
 
 [sub_resource type="FastNoiseLite" id="FastNoiseLite_84670"]
 seed = 3
 frequency = 0.0053
-offset = Vector3(10, 100, 0)
+offset = Vector3(0.0127504, 0.127504, 0)
 fractal_type = 3
 fractal_lacunarity = 8.965
 fractal_gain = 0.1
