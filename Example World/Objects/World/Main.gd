@@ -2,7 +2,7 @@ extends Node3D
 
 # Timer for the day cycle
 var day_length = 180.0  # Day length in seconds (how long a full 24-hour cycle takes in real time)
-var time_of_day = 12.0  # Current time of day in hours
+var time_of_day = 20.0  # Current time of day in hours
 @onready var environment : WorldEnvironment = $WorldEnvironment
 @onready var sunMoon = $DirectionalLight3D
 

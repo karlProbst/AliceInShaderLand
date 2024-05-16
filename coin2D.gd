@@ -8,6 +8,9 @@ func _ready():
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
-	scale*=1+delta
+	if(scale.x<1):
+		scale*=1+delta*5
+	else:
+		scale*=1+delta
 	if scale.x>3:
 		queue_free()

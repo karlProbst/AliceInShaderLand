@@ -1,4 +1,4 @@
-[gd_scene load_steps=111 format=3 uid="uid://oc13h3au02ro"]
+[gd_scene load_steps=126 format=3 uid="uid://oc13h3au02ro"]
 
 [ext_resource type="Script" path="res://scripts/Player_Character/player_character.gd" id="1_dwwa2"]
 [ext_resource type="Script" path="res://scripts/Player_Character/HUD.gd" id="2_beh8p"]
@@ -6,7 +6,10 @@
 [ext_resource type="Texture2D" uid="uid://bjh5ic6qy4jtl" path="res://HUD ASSETS/crosshair001.png" id="4_mk85o"]
 [ext_resource type="Texture2D" uid="uid://uidicgaojgdi" path="res://HUD ASSETS/crosshair046.png" id="5_pjba3"]
 [ext_resource type="Material" uid="uid://cmcetn3jo6tdg" path="res://FpsTemplate/glass.tres" id="6_op8x5"]
+[ext_resource type="Shader" path="res://FpsTemplate/button.gdshader" id="6_sf75h"]
 [ext_resource type="Texture2D" uid="uid://dfkyharvfrqxq" path="res://Textures/spinning_cpoin2.png" id="6_upvp0"]
+[ext_resource type="Texture2D" uid="uid://cxdu701w6dtd5" path="res://Textures/quit.png" id="8_lxpjd"]
+[ext_resource type="Texture2D" uid="uid://bq2uqt3wlvq5l" path="res://Textures/alice.png" id="9_gnu41"]
 [ext_resource type="Texture2D" uid="uid://baeloprrhxai7" path="res://Textures/RegadorBlue.tres" id="10_b5gab"]
 [ext_resource type="AnimationLibrary" uid="uid://uybino34n0sj" path="res://FpsTemplate/weapon_animation.res" id="13_lmhsg"]
 
@@ -66,14 +69,232 @@ _data = {
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_5mxbr"]
 shader = ExtResource("3_w3n5t")
-shader_parameter/blur_radius = 0.2
-shader_parameter/blur_amount = 1.0
-shader_parameter/blur_inner = 0.6
-shader_parameter/blur_outer = 0.66
+shader_parameter/blur_radius = 0.459
+shader_parameter/blur_amount = 5.0
+shader_parameter/blur_inner = 0.141
+shader_parameter/blur_outer = 0.705
 
 [sub_resource type="LabelSettings" id="LabelSettings_57ljr"]
 font_size = 31
 outline_size = 5
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_o2233"]
+
+[sub_resource type="Animation" id="Animation_eapma"]
+resource_name = "new_animation"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:value")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 1),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [0.0, 80.0]
+}
+
+[sub_resource type="Animation" id="Animation_e752k"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:value")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [80.0]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_0j47n"]
+_data = {
+"RESET": SubResource("Animation_e752k"),
+"new_animation": SubResource("Animation_eapma")
+}
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_qfsty"]
+shader = ExtResource("6_sf75h")
+shader_parameter/pixel_mode = true
+shader_parameter/pixel_amount = 128.0
+shader_parameter/distortion = 0.012
+shader_parameter/texture_noise_system = false
+shader_parameter/noise_speed = 1.0
+shader_parameter/noise_direction = 1
+shader_parameter/worley_noise_system = true
+shader_parameter/worley_cell_density = -0.79
+shader_parameter/worley_speed = 23.115
+shader_parameter/edge_and_mask = false
+shader_parameter/alpha_value = 1.0
+shader_parameter/noise_texture = ExtResource("8_lxpjd")
+shader_parameter/mask_texture = ExtResource("8_lxpjd")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_jvwxn"]
+shader = ExtResource("6_sf75h")
+shader_parameter/pixel_mode = true
+shader_parameter/pixel_amount = 720.0
+shader_parameter/distortion = 0.009
+shader_parameter/texture_noise_system = true
+shader_parameter/noise_speed = 0.1
+shader_parameter/noise_direction = -1
+shader_parameter/worley_noise_system = true
+shader_parameter/worley_cell_density = 15.45
+shader_parameter/worley_speed = 0.825
+shader_parameter/edge_and_mask = false
+shader_parameter/alpha_value = 1.0
+
+[sub_resource type="Shader" id="Shader_wydj2"]
+code = "shader_type canvas_item;
+render_mode blend_mix;
+
+uniform bool pixel_mode = true;
+uniform float pixel_amount = 32.0;
+uniform float distortion : hint_range(0.0, 0.1) = 0.01;
+
+/// Noise Texture System
+uniform bool texture_noise_system = true;
+uniform float noise_speed = 1.0;
+uniform int noise_direction : hint_range(-1, 1) = -1;
+uniform sampler2D noise_texture : source_color ,repeat_enable;
+
+/// Worley System
+uniform bool worley_noise_system = false;
+uniform float worley_cell_density = 10.0;
+uniform float worley_speed = 2.0;
+
+/// Bordes Effect
+uniform sampler2D mask_texture : source_color, filter_nearest;
+uniform bool edge_and_mask = false;
+uniform float alpha_value : hint_range(0.0, 1.0) = 1.0;
+
+/// Worley Methods
+vec2 random(vec2 uv) {
+	return vec2(fract(sin(dot(uv.xy,
+		vec2(12.9898,78.233))) * 43758.5453123));
+}
+
+float worley(vec2 uv, float columns, float rows, float time) {
+	
+	vec2 index_uv = floor(vec2(uv.x * columns, uv.y * rows));
+	vec2 fract_uv = fract(vec2(uv.x * columns, uv.y * rows));
+	
+	float minimum_dist = 1.0;  
+	
+	for (int y= -1; y <= 1; y++) {
+		for (int x= -1; x <= 1; x++) {
+			vec2 neighbor = vec2(float(x),float(y));
+			vec2 point = random(index_uv + neighbor);
+			point = vec2( cos(time * point.x * worley_speed), sin(time * point.y * worley_speed) ) * 0.5 + 0.5;
+			
+			vec2 diff = neighbor + point - fract_uv;
+			float dist = length(diff);
+			minimum_dist = min(minimum_dist, dist);
+		}
+	}
+	
+	return minimum_dist;
+}
+
+void fragment() {
+	vec4 uv_result = vec4(0.0);
+	vec2 uv;
+	
+	/// Pixel Mode 
+	if (pixel_mode){
+		uv = floor(UV * pixel_amount) / pixel_amount;
+	}else{
+		uv = UV;
+	}
+	
+	/// Noise Texture System
+	if (texture_noise_system){
+		vec4 noise_uv = texture(noise_texture, uv + TIME * noise_speed * float(noise_direction));
+		uv_result += noise_uv;
+	}
+	
+	/// Worley Noise System
+	if (worley_noise_system){
+		float worley = worley(uv, worley_cell_density, worley_cell_density, TIME);
+		vec4 result = texture(TEXTURE, vec2(worley));
+		uv_result += result;
+	}
+	
+	/// Blend
+	vec2 noise_uv = mix(uv, uv_result.rg, distortion);
+	
+	if (edge_and_mask){
+		vec4 base = texture(TEXTURE, uv);
+		vec4 blend = texture(mask_texture, noise_uv);
+	
+		vec4 final_color = mix(base, blend, blend.a);
+		
+		COLOR = final_color;
+		COLOR.a = (texture(TEXTURE, noise_uv).a) * alpha_value;
+	}
+	else
+	{
+		COLOR = texture(TEXTURE, noise_uv);
+		COLOR.a = (texture(TEXTURE, noise_uv).a) * alpha_value;
+	}
+}
+"
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_porlk"]
+shader = SubResource("Shader_wydj2")
+shader_parameter/pixel_mode = true
+shader_parameter/pixel_amount = 720.0
+shader_parameter/distortion = 0.004
+shader_parameter/texture_noise_system = true
+shader_parameter/noise_speed = 1.34
+shader_parameter/noise_direction = -1
+shader_parameter/worley_noise_system = true
+shader_parameter/worley_cell_density = 1.0
+shader_parameter/worley_speed = -1.09
+shader_parameter/edge_and_mask = false
+shader_parameter/alpha_value = 1.0
+
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_a8dv8"]
+load_path = "res://.godot/imported/starttexture.webp-a8b631ce4be9e808afda6a452ad9b5fe.ctex"
+
+[sub_resource type="Animation" id="Animation_an44b"]
+resource_name = "new_animation"
+length = 3.0
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 3),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [Color(1, 1, 1, 0), Color(0, 0, 0, 1)]
+}
+
+[sub_resource type="Animation" id="Animation_12r4o"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(0, 0, 0, 1)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_7fkyi"]
+_data = {
+"RESET": SubResource("Animation_12r4o"),
+"new_animation": SubResource("Animation_an44b")
+}
 
 [sub_resource type="ImageTexture" id="ImageTexture_rj3p7"]
 
@@ -1456,6 +1677,7 @@ unique_name_in_owner = true
 script = ExtResource("2_beh8p")
 
 [node name="Interaction" type="HBoxContainer" parent="Ui"]
+visible = false
 offset_left = 435.0
 offset_top = 262.0
 offset_right = 577.0
@@ -1583,7 +1805,144 @@ size_flags_horizontal = 3
 min_value = 1.0
 value = 30.0
 
+[node name="filler" type="HBoxContainer" parent="Ui/Start"]
+layout_mode = 2
+
+[node name="MusicVol" type="Label" parent="Ui/Start/filler"]
+layout_mode = 2
+text = "
+
+
+
+
+
+
+
+
+
+
+
+
+"
+
+[node name="BackToMenu" type="Button" parent="Ui/Start"]
+layout_mode = 2
+text = "Quit Game"
+
+[node name="StartGame" type="VBoxContainer" parent="Ui"]
+modulate = Color(0, 0, 0, 1)
+self_modulate = Color(1, 1, 1, 0.337255)
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -308.0
+offset_top = 29.0
+offset_right = 309.0
+offset_bottom = 697.0
+grow_horizontal = 2
+alignment = 1
+
+[node name="Title" type="HBoxContainer" parent="Ui/StartGame"]
+layout_mode = 2
+alignment = 1
+
+[node name="Label" type="Label" parent="Ui/StartGame/Title"]
+layout_mode = 2
+text = "
+
+
+
+
+
+"
+label_settings = SubResource("LabelSettings_57ljr")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="StartButton" type="HBoxContainer" parent="Ui/StartGame"]
+layout_direction = 1
+layout_mode = 2
+alignment = 1
+
+[node name="Label" type="Label" parent="Ui/StartGame/StartButton"]
+layout_mode = 2
+
+[node name="Button" type="Button" parent="Ui/StartGame/StartButton"]
+layout_mode = 2
+text = "                                                     
+
+
+                                              "
+flat = true
+
+[node name="MusicLabel" type="HBoxContainer" parent="Ui/StartGame"]
+layout_mode = 2
+alignment = 1
+
+[node name="Label" type="Label" parent="Ui/StartGame/MusicLabel"]
+layout_mode = 2
+text = "Music Volume"
+
+[node name="Music" type="HBoxContainer" parent="Ui/StartGame"]
+layout_mode = 2
+alignment = 1
+
+[node name="MusicVol2" type="Label" parent="Ui/StartGame/Music"]
+layout_mode = 2
+text = "                                           "
+
+[node name="MusicVolSlider" type="HSlider" parent="Ui/StartGame/Music"]
+material = SubResource("ShaderMaterial_o2233")
+layout_mode = 2
+size_flags_horizontal = 3
+step = 5.0
+value = 80.0
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Ui/StartGame/Music/MusicVolSlider"]
+libraries = {
+"": SubResource("AnimationLibrary_0j47n")
+}
+autoplay = "new_animation"
+
+[node name="MusicVol" type="Label" parent="Ui/StartGame/Music"]
+layout_mode = 2
+text = "                                           "
+
+[node name="Label2" type="Label" parent="Ui/StartGame"]
+layout_mode = 2
+
+[node name="quit" type="HBoxContainer" parent="Ui/StartGame"]
+layout_mode = 2
+alignment = 1
+
+[node name="QuitButton" type="Button" parent="Ui/StartGame/quit"]
+material = SubResource("ShaderMaterial_qfsty")
+layout_mode = 2
+icon = ExtResource("8_lxpjd")
+
+[node name="Label" type="Label" parent="Ui/StartGame/quit"]
+layout_mode = 2
+
+[node name="Sprite2D" type="Sprite2D" parent="Ui/StartGame"]
+material = SubResource("ShaderMaterial_jvwxn")
+position = Vector2(300, 108)
+scale = Vector2(0.632948, 0.632948)
+texture = ExtResource("9_gnu41")
+
+[node name="Sprite2D2" type="Sprite2D" parent="Ui/StartGame"]
+material = SubResource("ShaderMaterial_porlk")
+position = Vector2(307, 381)
+scale = Vector2(0.130893, 0.130893)
+texture = SubResource("CompressedTexture2D_a8dv8")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Ui/StartGame"]
+libraries = {
+"": SubResource("AnimationLibrary_7fkyi")
+}
+autoplay = "new_animation"
+
 [node name="Sprint_Bar" type="HSlider" parent="Ui"]
+visible = false
 anchors_preset = 7
 anchor_left = 0.5
 anchor_top = 1.0
@@ -1604,6 +1963,7 @@ editable = false
 scrollable = false
 
 [node name="Coins" type="HBoxContainer" parent="Ui"]
+visible = false
 offset_left = 85.0
 offset_top = 656.0
 offset_right = 227.0
@@ -1620,6 +1980,8 @@ speed_scale = 7.625
 
 [node name="CurrentMoney" type="Label" parent="Ui/Coins"]
 layout_mode = 2
+
+[node name="Node2D" type="Node2D" parent="Ui"]
 
 [node name="Node3D" type="Node3D" parent="."]
 
@@ -1787,6 +2149,10 @@ one_shot = true
 [connection signal="value_changed" from="Ui/Start/MusicVolSlider" to="." method="_on_music_vol_slider_value_changed"]
 [connection signal="value_changed" from="Ui/Start/FxVolSlider" to="." method="_on_fx_vol_slider_value_changed"]
 [connection signal="value_changed" from="Ui/Start/SenSlider" to="." method="_on_sen_slider_value_changed"]
+[connection signal="pressed" from="Ui/Start/BackToMenu" to="." method="_on_back_to_menu_pressed"]
+[connection signal="pressed" from="Ui/StartGame/StartButton/Button" to="." method="_on_button_pressed"]
+[connection signal="value_changed" from="Ui/StartGame/Music/MusicVolSlider" to="." method="_on_music_vol_slider_value_changed"]
+[connection signal="pressed" from="Ui/StartGame/quit/QuitButton" to="." method="_on_quit_button_pressed"]
 [connection signal="body_entered" from="pick_up_detection" to="Camera/lean_pivot/MainCamera/Weapons_Manager" method="_on_pick_up_detection_body_entered"]
 [connection signal="timeout" from="Sprint_Timer" to="." method="_on_sprint_timer_timeout"]
 [connection signal="timeout" from="Coyote_Timer" to="." method="_on_coyote_timer_timeout"]

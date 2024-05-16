@@ -61,6 +61,8 @@ var Speed_Modifier: float = NORMAL_SPEED
 @export var Jump_Buffer_Time: float = .2
 @onready var coyote_timer: Timer = $Coyote_Timer
 @onready var saturation_anim = get_node("../WorldEnvironment/Chapadao")
+@onready var startGameTrigger = get_node("../StartGameTrigger")
+@onready var startGameCameraLook = get_node("../StartGameCameraLook")
 @onready var eye = get_node("../Eye")
 @onready var pot = null
 @onready var fx_drink = get_node("fx_drink")
@@ -78,7 +80,7 @@ var Jump_Buffer: bool = false
 var hit_location = Vector3.ZERO
 var scale_var
 var stuck = 0
-var chapadao = 0
+var chapadao = 0.0
 var money = 0
 var catHipnose=0
 var ChangeFovSet=90
@@ -90,6 +92,8 @@ var waterMax=4
 @onready var regador = $Camera/lean_pivot/MainCamera/Weapons_Manager/Regador 
 @onready var moneyCounter = $Ui/Coins/CurrentMoney
 var cursortrue=0
+var gameStart=true
+
 func refillWater():
 	water=waterMax
 func _ready():
@@ -129,7 +133,7 @@ func StartMenu():
 		$Ui/Main_Sight.visible=true
 		$Ui/Interaction.visible=true
 func _input(event):
-
+	
 	if event.is_action_pressed("ui_cancel"):
 		StartMenu()
 	if(!paused) and stuck<=0:
@@ -282,6 +286,16 @@ func Camera_eye(delta):
 
 
 func _physics_process(delta):
+	if gameStart:
+		if !paused:
+			fade(0.1)
+		paused=true
+		CallCamera(startGameCameraLook,delta,1000.0)
+		global_transform.origin=startGameTrigger.global_transform.origin+Vector3(0,32,0)
+		$Ui/Main_Sight.visible=false
+		Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
+	elif $StartMusic.volume_db>-40:
+		$StartMusic.volume_db-=delta*10
 	if cursortrue>0:
 		Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)	
 		if cursortrue<0.1:
@@ -321,7 +335,7 @@ func _physics_process(delta):
 		stuck-=delta
 		if chapadao>0:
 			CallCamera(pot,delta,1.0,50.0)
-	
+			
 	isInteractive=null
 	Camera_eye(delta)
 	if(chapadao>0.01):
@@ -331,7 +345,9 @@ func _physics_process(delta):
 			d+=delta/2
 		else:
 			d=lerp(d,0.0,delta)
-		
+			
+		$Ui/BlurVignette.material.set_shader_parameter("blur_radius", 3.2)
+		$Ui/BlurVignette.material.set_shader_parameter("blur_amount", 0.5)
 		#world_env.environment.brightness = 1+(d/2)
 		#world_env.contrast =1+d
 		saturation_anim.play("new_animation")
@@ -339,10 +355,13 @@ func _physics_process(delta):
 		saturation_anim.seek(d*6)
 
 		$Camera/glassass.mesh.material.set_shader_parameter("distortion_size",d)
+		$Ui/BlurVignette.material.set_shader_parameter("blur_radius", 0.2)
 		chapadao=lerp(chapadao,0.0,delta/4)
 		
 	else:
 		saturation_anim.seek(0)
+		if !paused:
+			$Ui/BlurVignette.material.set_shader_parameter("blur_amount", 0.2)
 		#world_env.brightness = 1
 		#world_env.contrast =1
 		
@@ -489,25 +508,26 @@ func CameraLook(Movement: Vector2):
 	
 func CallCamera(target_node: Node, delta: float, base_speed: float, max_rotation_speed: float = 0.1):
 	# Get the target node's global position
-	var target_global_position = target_node.global_transform.origin
-	var player_rotation_y = rotation.y
-	# Get the player's forward direction based on rotation
-	var player_forward = Vector3(sin(player_rotation_y), 0, cos(player_rotation_y))
-	# Calculate the direction to the target node
-	var direction_to_target = global_transform.origin - target_global_position
-	direction_to_target.y = 0  # Ensure no vertical movement
-	# Add a small epsilon to denominator to avoid division by zero
-	var denominator = direction_to_target.x + 0.0001
-	# Calculate the angle between player's forward direction and direction to target
-	var angle_to_target = atan2(direction_to_target.z, denominator) - atan2(player_forward.z, player_forward.x)
-	# Smoothly rotate towards the angle to the target
-	var rotationy = Camera.rotation.x/10.0
-	CameraLook(Vector2(angle_to_target / base_speed, rotationy/ base_speed))
+	if target_node:
+		var target_global_position = target_node.global_transform.origin
+		var player_rotation_y = rotation.y
+		# Get the player's forward direction based on rotation
+		var player_forward = Vector3(sin(player_rotation_y), 0, cos(player_rotation_y))
+		# Calculate the direction to the target node
+		var direction_to_target = global_transform.origin - target_global_position
+		direction_to_target.y = 0  # Ensure no vertical movement
+		# Add a small epsilon to denominator to avoid division by zero
+		var denominator = direction_to_target.x + 0.0001
+		# Calculate the angle between player's forward direction and direction to target
+		var angle_to_target = atan2(direction_to_target.z, denominator) - atan2(player_forward.z, player_forward.x)
+		# Smoothly rotate towards the angle to the target
+		var rotationy = Camera.rotation.x/10.0
+		CameraLook(Vector2(angle_to_target / base_speed, rotationy/ base_speed))
 
-func fade():
+func fade(time = 1):
 	$Ui/Black/AnimationPlayer.stop()
 	$Ui/Black/AnimationPlayer.play("new_animation")
-
+	$Ui/Black/AnimationPlayer.speed_scale=time
 func Regar():
 	water-=1
 	regador.get_node("AnimationPlayer").play("Regando")
@@ -518,6 +538,7 @@ func spawn_coin_2d(node):
 	coin.play("default")
 	coin.scale/=node.global_transform.origin.distance_to(self.global_transform.origin)
 func CollectedCoin(node,n):
+	$Ui/Coins.visible=true
 	money+=1
 	moneyCounter.text=str(money)
 	fx_coin.play()
@@ -529,3 +550,24 @@ func CollectedCoin(node,n):
 
 	
 
+
+
+func _on_button_pressed():
+	gameStart=false
+	fade(0.01)
+	CallCamera(cat,1,1.0)
+	global_transform.origin=startGameTrigger.global_transform.origin
+	$Ui/Main_Sight.visible=true
+	$Ui/StartGame.visible=false
+	paused=false
+	$CorredorMusic.play()
+	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
+	
+
+
+func _on_quit_button_pressed():
+	get_tree().quit()
+
+
+func _on_back_to_menu_pressed():
+	get_tree().quit()

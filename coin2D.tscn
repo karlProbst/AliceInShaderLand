@@ -242,7 +242,7 @@ _data = {
 }
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D"]
-position = Vector2(974, 400)
+position = Vector2(648, 385)
 scale = Vector2(1.01, 1.01)
 sprite_frames = SubResource("SpriteFrames_tyqol")
 frame_progress = 0.869782

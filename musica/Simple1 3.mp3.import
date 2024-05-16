@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://clq72bje3mv38"
+path="res://.godot/imported/Simple1 3.mp3-5c253f772431b24f9cbcf1368da79378.mp3str"
+
+[deps]
+
+source_file="res://musica/Simple1 3.mp3"
+dest_files=["res://.godot/imported/Simple1 3.mp3-5c253f772431b24f9cbcf1368da79378.mp3str"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4
