@@ -265,7 +265,7 @@ func show_example_dialogue_balloon(resource: DialogueResource, title: String = "
 	var balloon: Node = load(_get_example_balloon_path()).instantiate()
 	get_current_scene.call().add_child(balloon)
 	balloon.start(resource, title, extra_game_states)
-	
+
 	return balloon
 
 

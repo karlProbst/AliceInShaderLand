@@ -1,0 +1,15 @@
+~ start
+
+
+Gato: Olá humano.
+Gato: Se você pretende cuidar das plantas a primeira coisa que precisa é de um regador.
+- É pra ja!
+
+	Gato: É pra ja!.
+- Second one
+	Gato: Onde está?.
+- Start again => start
+- End the conversation => END
+
+
+=> END

@@ -8,7 +8,7 @@ var rotation_speed: float = 3.0  # Speed of rotation towards the velocity direct
 var gravity: float = -9.8  # Acceleration due to gravity (m/s^2)
 var stop_radius: float = 2.0  # Distance at which the cat stops moving towards the player
 var stuck_timer: float = 0.0  # Timer to track if the cat is stuck
-var is_stuck: bool = false  # Flag to check if the cat is stuck
+var is_stuck: bool = true  # Flag to check if the cat is stuck
 var random_run_duration: float = 0.0  # Duration for running in a random direction
 
 @onready var target: Node = get_parent().get_node("Player_Character")

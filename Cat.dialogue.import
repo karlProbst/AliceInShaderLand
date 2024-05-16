@@ -1,0 +1,15 @@
+[remap]
+
+importer="dialogue_manager_compiler_12"
+type="Resource"
+uid="uid://tyfyvcpk5sef"
+path="res://.godot/imported/Cat.dialogue-832183a65c2c65e0707719942a7f08c2.tres"
+
+[deps]
+
+source_file="res://Cat.dialogue"
+dest_files=["res://.godot/imported/Cat.dialogue-832183a65c2c65e0707719942a7f08c2.tres"]
+
+[params]
+
+defaults=true

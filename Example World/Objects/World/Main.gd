@@ -1,8 +1,8 @@
 extends Node3D
 
 # Timer for the day cycle
-var day_length = 120.0  # Day length in seconds (how long a full 24-hour cycle takes in real time)
-var time_of_day = 0.0  # Current time of day in hours
+var day_length = 180.0  # Day length in seconds (how long a full 24-hour cycle takes in real time)
+var time_of_day = 12.0  # Current time of day in hours
 @onready var environment : WorldEnvironment = $WorldEnvironment
 @onready var sunMoon = $DirectionalLight3D
 
@@ -34,5 +34,7 @@ func _process(delta):
 	if time_of_day >= 24.0:
 		time_of_day -= 24.0  # Normalize time of day after it reaches 24 hours
 	
+	
 	# Calculate and set the rotation of the sun/moon light
 	sunMoon.rotation_degrees.x = calculate_rotation(time_of_day)
+	$AP/Clock.set_time(time_of_day)

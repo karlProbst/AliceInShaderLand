@@ -13,7 +13,7 @@ var random_run_duration: float = 0.0  # Duration for running in a random directi
 var low_velocity_timer = 0.0
 var spd =  0
 var idle_sit_timer = 0.0
-var stuck = false
+var stuck = true
 @onready var target: Node = get_parent().get_node("Player_Character")
 @onready var raycastr: RayCast3D = $RayCast3DR
 @onready var raycastl: RayCast3D = $RayCast3DL
@@ -82,7 +82,7 @@ func _physics_process(delta):
 			if not stuck:
 				switch_animation("Idle", 1.0)
 func switch_animation(animation_name: String, speed_scale: float):
-	print(animation_name)
+	
 	if anim_player.current_animation != animation_name or anim_player.speed_scale != speed_scale:
 		anim_player.play(animation_name)
 		anim_player.speed_scale = speed_scale
@@ -100,8 +100,10 @@ func rotateCat(delta):
 func Touching():
 	pass
 func set_emission_energy_on():
-	var anim = $cat/cat/AnimationPlayer
-	anim.play("glow")
+	#var anim = $cat/Armature/Skeleton3D/mesh_cat/AnimationPlayer
+	#anim.play("glow")
+	pass
 func set_emission_energy_off():
-	var anim = $cat/Armature/Skeleton3D/mesh_cat/AnimationPlayer
-	anim.play("off")
+	#var anim = $cat/Armature/Skeleton3D/mesh_cat/AnimationPlayer
+	#anim.play("off")
+	pass

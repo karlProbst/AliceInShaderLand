@@ -27,10 +27,8 @@ var will_hide_balloon: bool = false
 var dialogue_line: DialogueLine:
 	set(next_dialogue_line):
 		is_waiting_for_input = false
-	
-		if(balloon):
-			balloon.focus_mode = Control.FOCUS_ALL
-			balloon.grab_focus()
+		balloon.focus_mode = Control.FOCUS_ALL
+		balloon.grab_focus()
 
 		# The dialogue has finished so close the balloon
 		if not next_dialogue_line:

@@ -18,6 +18,7 @@ var Start_Shake_Rotation = 0
 @onready var rayInt = $Camera/RayInt
 @onready var rayIntLong = $Camera/RayInt2
 @onready var uiInt = $Ui/Interaction
+@onready var ui= $Ui
 var meshnode
 var int_node_array := []
 
@@ -63,8 +64,10 @@ var Speed_Modifier: float = NORMAL_SPEED
 @onready var eye = get_node("../Eye")
 @onready var pot = null
 @onready var fx_drink = get_node("fx_drink")
+@onready var fx_coin = get_node("fx_coin")
 @onready var cat = get_node("../cat")
 @onready var rootNode = get_tree().get_root().get_node("World")
+var coin_scene = preload("res://coin2D.tscn")
 # Get the gravity from the project settings to be synced with RigidBody nodes.
 var Jump_Gravity = ProjectSettings.get_setting("physics/3d/default_gravity")
 var Fall_Gravity: float
@@ -85,7 +88,8 @@ var hasRegador=false
 var water=0
 var waterMax=4
 @onready var regador = $Camera/lean_pivot/MainCamera/Weapons_Manager/Regador 
-
+@onready var moneyCounter = $Ui/Coins/CurrentMoney
+var cursortrue=0
 func refillWater():
 	water=waterMax
 func _ready():
@@ -125,13 +129,13 @@ func StartMenu():
 		$Ui/Main_Sight.visible=true
 		$Ui/Interaction.visible=true
 func _input(event):
-	
+
 	if event.is_action_pressed("ui_cancel"):
 		StartMenu()
-	if(!paused):
+	if(!paused) and stuck<=0:
 		
 
-		if event is InputEventMouseMotion:
+		if event is InputEventMouseMotion and cursortrue<=0:
 			var MouseEvent = event.relative * MouseSensitivity
 			CameraLook(MouseEvent)
 			
@@ -142,11 +146,13 @@ func _input(event):
 			if !(Input.is_action_pressed("lean_right") or Input.is_action_pressed("lean_left")):
 				pass
 		if Input.is_action_just_pressed("lean_left"):
+			
 			if scale_var.x>0.1:
 				
 				ChangeFovSet=88+(1-scale_var.x)*15
 			#$Camera/lean_pivot/MainCamera.fov=88+(1-scale_var.x)*15
 				self.scale/=2
+				
 				scale_var/=2
 				Jump_Height=scale_var.x/200
 				Jump_Distance=scale_var.x/500
@@ -276,6 +282,11 @@ func Camera_eye(delta):
 
 
 func _physics_process(delta):
+	if cursortrue>0:
+		Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)	
+		if cursortrue<0.1:
+			Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
+		cursortrue-=delta
 	if hasRegador:
 		regador.visible=true
 	else:
@@ -348,6 +359,12 @@ func _physics_process(delta):
 
 
 	if(!paused):
+		if rayIntLong.is_colliding():
+			var collision = rayIntLong.get_collider()
+			if collision:
+				if collision.is_in_group("Coin"):
+					CollectedCoin(collision,1)
+				
 		if rayInt.is_colliding():
 			
 			var collision = rayInt.get_collider()
@@ -495,8 +512,19 @@ func Regar():
 	water-=1
 	regador.get_node("AnimationPlayer").play("Regando")
 
-
-
+func spawn_coin_2d(node):
+	var coin = coin_scene.instantiate()
+	add_child(coin)
+	coin.play("default")
+	coin.scale/=node.global_transform.origin.distance_to(self.global_transform.origin)
+func CollectedCoin(node,n):
+	money+=1
+	moneyCounter.text=str(money)
+	fx_coin.play()
+	spawn_coin_2d(node)
+	if(node):
+		node.queue_free()
+	
 
 
 	

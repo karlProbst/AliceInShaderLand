@@ -14,7 +14,7 @@ func Recolor():
 	noise_texture.noise.fractal_type=3
 	# Iterate over all children of this node
 	#var d = (randf()*7)+0.8
-	var d = randf_range(0.6,3.0)
+	var d = randf_range(1.0,3.0)
 	print(d)
 	for child in get_children():
 		if child is MeshInstance3D:

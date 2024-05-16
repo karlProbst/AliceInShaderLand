@@ -1,0 +1,17 @@
+[gd_scene load_steps=2 format=3 uid="uid://beydfjdjve3q5"]
+
+[sub_resource type="GDScript" id="GDScript_c4xki"]
+script/source = "extends Area3D
+
+
+@export var dialogue_resource: DialogueResource
+@export var dialog_start: String = \"start\"
+
+func action() -> void:
+	DialogueManager.show_example_dialogue_balloon(dialogue_resource,dialog_start)
+"
+
+[node name="Area" type="Area3D"]
+collision_layer = 128
+collision_mask = 0
+script = SubResource("GDScript_c4xki")

@@ -1,0 +1,17 @@
+~ start
+
+set stuck = true
+Gato: Olá humano.
+Gato: Se você pretende cuidar das plantas, a primeira coisa que precisa é de um regador.
+- É pra já!
+	set enteringApTrigger=false
+	=> end_conversation
+- Daqui a pouco
+	Gato: Anda logo humano.
+	set enteringApTrigger=false
+	=> end_conversation	
+
+
+~ end_conversation
+set stuck = false
+=> END

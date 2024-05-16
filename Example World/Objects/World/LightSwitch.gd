@@ -4,12 +4,12 @@ extends Node3D
 var shader_material
 @export var Name = "Bed"
 @onready var player = get_tree().get_root().get_node("World/LightBulb")
-@onready var gato = preload("res://Dialog/Gato.dialogue") 
+
 func PlayAction():
 	
 
-	DialogueManager.show_dialogue_balloon(gato,"start")
-	print("JFKjlkdlkjLFLEDJFDJFLKDJFL")
+	
+	
 	if has_node("AnimationPlayer"):
 		print($AnimationPlayer.current_animation)
 		if $AnimationPlayer.current_animation=="on":
