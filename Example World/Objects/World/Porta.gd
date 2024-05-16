@@ -29,16 +29,19 @@ func _physics_process(delta):
 				if apMusic.volume_db<=-20:
 					$AnimationPlayer.play("Fechando")
 					apMusic.play()
-				if apMusic.volume_db<-8:
-					
-					apMusic.volume_db+=delta*10
+					apMusic.volume_db+=delta*5
 				else:
+					if apMusic.volume_db<-8:
+						apMusic.volume_db+=delta*.15
 					if !dialog:
 						DialogueManager.show_example_dialogue_balloon(gameScript,"start")
 						dialog=true
 	elif dialog:
 		cat.stuck=false
-		dialog = true			
+		if apMusic.volume_db<-8:
+			apMusic.volume_db+=delta*.15
+		else:
+			dialog = true			
 func PlayAction():
 	if has_node("AnimationPlayer"):
 		$AnimationPlayer.play("Abrindo")

@@ -526,8 +526,9 @@ func CallCamera(target_node: Node, delta: float, base_speed: float, max_rotation
 
 func fade(time = 1):
 	$Ui/Black/AnimationPlayer.stop()
-	$Ui/Black/AnimationPlayer.play("new_animation")
 	$Ui/Black/AnimationPlayer.speed_scale=time
+	$Ui/Black/AnimationPlayer.play("new_animation")
+	
 func Regar():
 	water-=1
 	regador.get_node("AnimationPlayer").play("Regando")
@@ -554,7 +555,8 @@ func CollectedCoin(node,n):
 
 func _on_button_pressed():
 	gameStart=false
-	fade(0.01)
+	$ApMusic.volume_db=-20.0
+	fade(0.03)
 	CallCamera(cat,1,1.0)
 	global_transform.origin=startGameTrigger.global_transform.origin
 	$Ui/Main_Sight.visible=true

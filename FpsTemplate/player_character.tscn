@@ -1,4 +1,4 @@
-[gd_scene load_steps=126 format=3 uid="uid://oc13h3au02ro"]
+[gd_scene load_steps=130 format=3 uid="uid://oc13h3au02ro"]
 
 [ext_resource type="Script" path="res://scripts/Player_Character/player_character.gd" id="1_dwwa2"]
 [ext_resource type="Script" path="res://scripts/Player_Character/HUD.gd" id="2_beh8p"]
@@ -9,7 +9,10 @@
 [ext_resource type="Shader" path="res://FpsTemplate/button.gdshader" id="6_sf75h"]
 [ext_resource type="Texture2D" uid="uid://dfkyharvfrqxq" path="res://Textures/spinning_cpoin2.png" id="6_upvp0"]
 [ext_resource type="Texture2D" uid="uid://cxdu701w6dtd5" path="res://Textures/quit.png" id="8_lxpjd"]
-[ext_resource type="Texture2D" uid="uid://bq2uqt3wlvq5l" path="res://Textures/alice.png" id="9_gnu41"]
+[ext_resource type="Texture2D" uid="uid://oownlibju6p1" path="res://Textures/alciecat_title.png" id="8_oadnr"]
+[ext_resource type="Texture2D" uid="uid://cppy02y5b5j34" path="res://Textures/play.webp" id="9_4ax7y"]
+[ext_resource type="Texture2D" uid="uid://cvmn25p6pdtuo" path="res://Textures/alice_back_only.png" id="9_dm6ar"]
+[ext_resource type="Script" path="res://FpsTemplate/AnimationPlayer.gd" id="10_3ppyo"]
 [ext_resource type="Texture2D" uid="uid://baeloprrhxai7" path="res://Textures/RegadorBlue.tres" id="10_b5gab"]
 [ext_resource type="AnimationLibrary" uid="uid://uybino34n0sj" path="res://FpsTemplate/weapon_animation.res" id="13_lmhsg"]
 
@@ -80,21 +83,6 @@ outline_size = 5
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_o2233"]
 
-[sub_resource type="Animation" id="Animation_eapma"]
-resource_name = "new_animation"
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath(".:value")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0, 1),
-"transitions": PackedFloat32Array(1, 1),
-"update": 0,
-"values": [0.0, 80.0]
-}
-
 [sub_resource type="Animation" id="Animation_e752k"]
 length = 0.001
 tracks/0/type = "value"
@@ -110,6 +98,21 @@ tracks/0/keys = {
 "values": [80.0]
 }
 
+[sub_resource type="Animation" id="Animation_eapma"]
+resource_name = "new_animation"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:value")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 1),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [0.0, 80.0]
+}
+
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_0j47n"]
 _data = {
 "RESET": SubResource("Animation_e752k"),
@@ -120,15 +123,15 @@ _data = {
 shader = ExtResource("6_sf75h")
 shader_parameter/pixel_mode = true
 shader_parameter/pixel_amount = 128.0
-shader_parameter/distortion = 0.012
+shader_parameter/distortion = 0.004
 shader_parameter/texture_noise_system = false
 shader_parameter/noise_speed = 1.0
 shader_parameter/noise_direction = 1
 shader_parameter/worley_noise_system = true
 shader_parameter/worley_cell_density = -0.79
-shader_parameter/worley_speed = 23.115
+shader_parameter/worley_speed = 3.315
 shader_parameter/edge_and_mask = false
-shader_parameter/alpha_value = 1.0
+shader_parameter/alpha_value = 0.657
 shader_parameter/noise_texture = ExtResource("8_lxpjd")
 shader_parameter/mask_texture = ExtResource("8_lxpjd")
 
@@ -137,10 +140,10 @@ shader = ExtResource("6_sf75h")
 shader_parameter/pixel_mode = true
 shader_parameter/pixel_amount = 720.0
 shader_parameter/distortion = 0.009
-shader_parameter/texture_noise_system = true
+shader_parameter/texture_noise_system = false
 shader_parameter/noise_speed = 0.1
 shader_parameter/noise_direction = -1
-shader_parameter/worley_noise_system = true
+shader_parameter/worley_noise_system = false
 shader_parameter/worley_cell_density = 15.45
 shader_parameter/worley_speed = 0.825
 shader_parameter/edge_and_mask = false
@@ -256,8 +259,20 @@ shader_parameter/worley_speed = -1.09
 shader_parameter/edge_and_mask = false
 shader_parameter/alpha_value = 1.0
 
-[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_a8dv8"]
-load_path = "res://.godot/imported/starttexture.webp-a8b631ce4be9e808afda6a452ad9b5fe.ctex"
+[sub_resource type="Animation" id="Animation_12r4o"]
+length = 2.0
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("PlayButtonSprite:skew")
+tracks/0/interp = 4
+tracks/0/loop_wrap = false
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 1, 1.1, 1.3, 1.6, 2),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1),
+"update": 2,
+"values": [1.56905, 0.0, -0.287979, 0.287979, 0.0, 0.0]
+}
 
 [sub_resource type="Animation" id="Animation_an44b"]
 resource_name = "new_animation"
@@ -275,26 +290,41 @@ tracks/0/keys = {
 "values": [Color(1, 1, 1, 0), Color(0, 0, 0, 1)]
 }
 
-[sub_resource type="Animation" id="Animation_12r4o"]
-length = 0.001
+[sub_resource type="Animation" id="Animation_ssdmr"]
+resource_name = "over"
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath(".:modulate")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
+tracks/0/path = NodePath("PlayButtonSprite:skew")
+tracks/0/interp = 4
+tracks/0/loop_wrap = false
 tracks/0/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Color(0, 0, 0, 1)]
+"times": PackedFloat32Array(0, 0.1, 0.3, 0.6, 1),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1),
+"update": 2,
+"values": [0.0, -0.287979, 0.287979, 0.0, 0.0]
 }
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_7fkyi"]
 _data = {
 "RESET": SubResource("Animation_12r4o"),
-"new_animation": SubResource("Animation_an44b")
+"new_animation": SubResource("Animation_an44b"),
+"over": SubResource("Animation_ssdmr")
 }
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_r6avw"]
+shader = ExtResource("6_sf75h")
+shader_parameter/pixel_mode = true
+shader_parameter/pixel_amount = 700.0
+shader_parameter/distortion = 0.001
+shader_parameter/texture_noise_system = true
+shader_parameter/noise_speed = 0.145
+shader_parameter/noise_direction = 1
+shader_parameter/worley_noise_system = true
+shader_parameter/worley_cell_density = 0.73
+shader_parameter/worley_speed = 1.8
+shader_parameter/edge_and_mask = false
+shader_parameter/alpha_value = 1.0
 
 [sub_resource type="ImageTexture" id="ImageTexture_rj3p7"]
 
@@ -1923,23 +1953,32 @@ icon = ExtResource("8_lxpjd")
 [node name="Label" type="Label" parent="Ui/StartGame/quit"]
 layout_mode = 2
 
-[node name="Sprite2D" type="Sprite2D" parent="Ui/StartGame"]
+[node name="Title2" type="Sprite2D" parent="Ui/StartGame"]
 material = SubResource("ShaderMaterial_jvwxn")
-position = Vector2(300, 108)
-scale = Vector2(0.632948, 0.632948)
-texture = ExtResource("9_gnu41")
+position = Vector2(311, 164)
+scale = Vector2(1.15199, 1.15199)
+texture = ExtResource("8_oadnr")
 
-[node name="Sprite2D2" type="Sprite2D" parent="Ui/StartGame"]
+[node name="PlayButtonSprite" type="Sprite2D" parent="Ui/StartGame"]
 material = SubResource("ShaderMaterial_porlk")
-position = Vector2(307, 381)
-scale = Vector2(0.130893, 0.130893)
-texture = SubResource("CompressedTexture2D_a8dv8")
+position = Vector2(308, 385)
+scale = Vector2(0.281133, 0.281133)
+skew = 1.56905
+texture = ExtResource("9_4ax7y")
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="Ui/StartGame"]
 libraries = {
 "": SubResource("AnimationLibrary_7fkyi")
 }
-autoplay = "new_animation"
+autoplay = "RESET"
+speed_scale = 1.545
+script = ExtResource("10_3ppyo")
+
+[node name="AliceBackOnly" type="Sprite2D" parent="Ui/StartGame"]
+material = SubResource("ShaderMaterial_r6avw")
+position = Vector2(316, 476)
+scale = Vector2(2.67625, 2.67625)
+texture = ExtResource("9_dm6ar")
 
 [node name="Sprint_Bar" type="HSlider" parent="Ui"]
 visible = false
@@ -1971,7 +2010,7 @@ offset_bottom = 679.0
 scale = Vector2(1.76, 2.12)
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="Ui/Coins"]
-position = Vector2(-26.1364, 9.90564)
+position = Vector2(-26.1364, 9.90567)
 scale = Vector2(0.573864, 0.476415)
 sprite_frames = SubResource("SpriteFrames_r45tr")
 animation = &"new_animation"
@@ -2150,6 +2189,7 @@ one_shot = true
 [connection signal="value_changed" from="Ui/Start/FxVolSlider" to="." method="_on_fx_vol_slider_value_changed"]
 [connection signal="value_changed" from="Ui/Start/SenSlider" to="." method="_on_sen_slider_value_changed"]
 [connection signal="pressed" from="Ui/Start/BackToMenu" to="." method="_on_back_to_menu_pressed"]
+[connection signal="mouse_entered" from="Ui/StartGame/StartButton/Button" to="Ui/StartGame/AnimationPlayer" method="_on_button_mouse_entered"]
 [connection signal="pressed" from="Ui/StartGame/StartButton/Button" to="." method="_on_button_pressed"]
 [connection signal="value_changed" from="Ui/StartGame/Music/MusicVolSlider" to="." method="_on_music_vol_slider_value_changed"]
 [connection signal="pressed" from="Ui/StartGame/quit/QuitButton" to="." method="_on_quit_button_pressed"]
