@@ -1,12 +1,12 @@
 extends CharacterBody3D
 
-var max_speed: float = 4.0  # Maximum speed at which the cat can move
+var max_speed: float = 2.0  # Maximum speed at which the cat can move
 var current_speed: float = 0.0  # Current speed of the cat, starts at 0
-var acceleration: float = 0.4  # Acceleration rate when on a straight path
-var deceleration: float = 1.5  # Deceleration rate when turning
+var acceleration: float = 0.1  # Acceleration rate when on a straight path
+var deceleration: float = 2.5  # Deceleration rate when turning
 var rotation_speed: float = 3.0  # Speed of rotation towards the velocity direction
 var gravity: float = -9.8  # Acceleration due to gravity (m/s^2)
-var stop_radius: float = 1.35  # Distance at which the cat stops moving towards the player
+var stop_radius: float = 3.0  # Distance at which the cat stops moving towards the player
 var stuck_timer: float = 0.0  # Timer to track if the cat is stuck
 var is_stuck: bool = false  # Flag to check if the cat is stuck
 var random_run_duration: float = 0.0  # Duration for running in a random direction
@@ -19,16 +19,28 @@ var stuck = true
 @onready var raycastl: RayCast3D = $RayCast3DL
 @onready var raycast: RayCast3D = $RayCast3D
 @onready var anim_player: AnimationPlayer = $cat/AnimationPlayer
-
+var playerdied=false
+var playerdied_timer=0
 var adkd=0
+@onready var player=target
 func _physics_process(delta):
-
+	if playerdied:
+		player.fade(1)
+		player.CallCamera(self,delta,1.0)
+		playerdied_timer+=delta
+		if playerdied_timer>5:
+			player.fade(1)
+		if playerdied_timer>6:	
+			get_tree().quit()
 	if target:
+		
+			
+			
 		var target_position = target.global_transform.origin
 		var distance_to_target = global_transform.origin.distance_to(target_position)
 		var direction = (target_position - global_transform.origin).normalized()
 		var flat_direction = Vector3(direction.x, 0, direction.z).normalized()
-	
+
 		if distance_to_target < stop_radius:
 			Touching()
 			idle_sit_timer+=delta
@@ -97,7 +109,10 @@ func rotateCat(delta):
 		rotation_angle -= PI / 2
 		global_transform.basis = global_transform.basis.rotated(rotation_axis, rotation_angle * rotation_speed * delta)
 func Touching():
-	pass
+
+	if stop_radius==0.3:
+		
+		playerdied=true
 func set_emission_energy_on():
 	#var anim = $cat/Armature/Skeleton3D/mesh_cat/AnimationPlayer
 	#anim.play("glow")

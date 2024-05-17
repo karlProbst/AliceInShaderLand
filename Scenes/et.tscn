@@ -1,0 +1,58 @@
+[gd_scene load_steps=9 format=3 uid="uid://miavoehip0bf"]
+
+[ext_resource type="Script" path="res://Et.gd" id="1_4uxkm"]
+[ext_resource type="Texture2D" uid="uid://bsgsoyuj38x7l" path="res://Textures/et.png" id="2_12hvk"]
+[ext_resource type="Texture2D" uid="uid://hcj2cuc6vhus" path="res://Textures/star.png" id="3_a80qx"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_n8sty"]
+transparency = 1
+shading_mode = 0
+albedo_texture = ExtResource("2_12hvk")
+billboard_mode = 1
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_gudd2"]
+material = SubResource("StandardMaterial3D_n8sty")
+size = Vector2(0.9, 0.9)
+orientation = 2
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_vumx1"]
+radius = 0.383861
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_sknoj"]
+transparency = 1
+albedo_texture = ExtResource("3_a80qx")
+emission_enabled = true
+emission = Color(0, 1, 0, 1)
+emission_energy_multiplier = 1.55
+billboard_mode = 1
+grow = true
+grow_amount = 2.0
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_v7uri"]
+material = SubResource("StandardMaterial3D_sknoj")
+orientation = 2
+
+[node name="Et" type="RigidBody3D" groups=["Et"]]
+collision_layer = 642
+collision_mask = 642
+mass = 0.01
+gravity_scale = 0.0
+script = ExtResource("1_4uxkm")
+
+[node name="bill" type="MeshInstance3D" parent="."]
+mesh = SubResource("PlaneMesh_gudd2")
+skeleton = NodePath("")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("SphereShape3D_vumx1")
+
+[node name="OmniLight3D" type="OmniLight3D" parent="."]
+light_color = Color(0, 0.956863, 0.301961, 1)
+light_energy = 1.445
+
+[node name="CPUParticles3D" type="CPUParticles3D" parent="."]
+emitting = false
+amount = 1
+one_shot = true
+mesh = SubResource("PlaneMesh_v7uri")
+gravity = Vector3(0, 0, 0)

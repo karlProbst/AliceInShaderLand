@@ -63,7 +63,7 @@ var Speed_Modifier: float = NORMAL_SPEED
 @onready var saturation_anim = get_node("../WorldEnvironment/Chapadao")
 @onready var startGameTrigger = get_node("../StartGameTrigger")
 @onready var startGameCameraLook = get_node("../StartGameCameraLook")
-@onready var eye = get_node("../Eye")
+@onready var eye = get_node("../AP/Porta/porta/Eye")
 @onready var pot = null
 @onready var fx_drink = get_node("fx_drink")
 @onready var fx_coin = get_node("fx_coin")
@@ -86,6 +86,7 @@ var catHipnose=0
 var ChangeFovSet=90
 var defaultFov=0
 var scale_var_default=0
+var scale_var_min=0
 var hasRegador=false
 var water=0
 var waterMax=4
@@ -93,7 +94,7 @@ var waterMax=4
 @onready var moneyCounter = $Ui/Coins/CurrentMoney
 var cursortrue=0
 var gameStart=true
-
+var raioLaser=false
 func refillWater():
 	water=waterMax
 func _ready():
@@ -102,6 +103,7 @@ func _ready():
 	$Camera/glassass/AnimationPlayer.play("offset")
 	scale_var=scale
 	scale_var_default=scale_var
+	scale_var_min=scale_var_default/10
 	Update_CameraRotation()
 	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
 	Calculate_Movement_Parameters()
@@ -134,7 +136,7 @@ func StartMenu():
 		$Ui/Interaction.visible=true
 func _input(event):
 	
-	if event.is_action_pressed("ui_cancel"):
+	if event.is_action_pressed("ui_cancel") and !gameStart:
 		StartMenu()
 	if(!paused) and stuck<=0:
 		
@@ -142,26 +144,7 @@ func _input(event):
 		if event is InputEventMouseMotion and cursortrue<=0:
 			var MouseEvent = event.relative * MouseSensitivity
 			CameraLook(MouseEvent)
-			
 	
-		
-			
-		if Input.is_action_just_released("lean_left") or Input.is_action_just_released("lean_right"):
-			if !(Input.is_action_pressed("lean_right") or Input.is_action_pressed("lean_left")):
-				pass
-		if Input.is_action_just_pressed("lean_left"):
-			
-			if scale_var.x>0.1:
-				
-				ChangeFovSet=88+(1-scale_var.x)*15
-			#$Camera/lean_pivot/MainCamera.fov=88+(1-scale_var.x)*15
-				self.scale/=2
-				
-				scale_var/=2
-				Jump_Height=scale_var.x/200
-				Jump_Distance=scale_var.x/500
-				Jump_Peak_Time=scale_var.x/500
-			
 		if Input.is_action_just_pressed("lean_right"):
 			if isInteractive:
 				
@@ -309,7 +292,8 @@ func _physics_process(delta):
 	if ChangeFovSet!=0:
 		if ChangeFov(ChangeFovSet,delta):
 			ChangeFovSet=0
-			
+	
+
 	if catHipnose>0:
 		
 		catHipnose-=delta
@@ -331,6 +315,7 @@ func _physics_process(delta):
 			fade()
 			self.global_position=Vector3(-0.1,3.5,13.72)
 			scale_var=scale_var_default
+			
 			
 	if stuck>0:
 		stuck-=delta
@@ -384,16 +369,16 @@ func _physics_process(delta):
 			if collision:
 				if collision.is_in_group("Coin"):
 					CollectedCoin(collision,1)
-				
+				if collision.is_in_group("Et"):
+					KillEt(collision)
 		if rayInt.is_colliding():
-			
 			var collision = rayInt.get_collider()
-			
-			if collision.is_in_group("Interactible"):
-				
-				ShowInteraction(true,collision,rayInt.get_collision_point())
-			else:
-				ShowInteraction(false,false,Vector3.ZERO)
+			if collision:
+				if collision.is_in_group("Interactible"):
+					
+					ShowInteraction(true,collision,rayInt.get_collision_point())
+				else:
+					ShowInteraction(false,false,Vector3.ZERO)
 		else:
 			ShowInteraction(false,false,Vector3.ZERO)
 			
@@ -574,3 +559,8 @@ func _on_quit_button_pressed():
 
 func _on_back_to_menu_pressed():
 	get_tree().quit()
+
+func KillEt(node):
+	if raioLaser:
+		node.queue_free()
+	
