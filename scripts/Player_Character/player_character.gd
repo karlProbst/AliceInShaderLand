@@ -314,11 +314,12 @@ func _physics_process(delta):
 		
 		catHipnose-=delta
 		CallCamera(cat,delta,1.0,10.0)
+		cat.stuck=true
 		cat.global_position=Vector3(0.277,3.5,12.064)
 		self.global_position=Vector3(-1.722,3.6,12.064)
 		scale_var=scale_var_default/3
 		ChangeFovSet=30
-		cat.stuck=true
+		
 		cat.set_emission_energy_on()
 		ChangeFovSet=30
 		

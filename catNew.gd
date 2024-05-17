@@ -67,7 +67,6 @@ func _physics_process(delta):
 		velocity.y += gravity * delta
 		if !stuck:
 			move_and_slide()
-			stuck=false
 		else:
 			switch_animation("Idle2", 1.0)
 			rotateCat(delta)
