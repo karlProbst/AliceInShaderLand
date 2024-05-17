@@ -269,6 +269,7 @@ func Camera_eye(delta):
 
 
 func _physics_process(delta):
+	CameraLook(Vector2(0,0))
 	if gameStart:
 		if !paused:
 			fade(0.1)
@@ -342,7 +343,7 @@ func _physics_process(delta):
 
 		$Camera/glassass.mesh.material.set_shader_parameter("distortion_size",d)
 		$Ui/BlurVignette.material.set_shader_parameter("blur_radius", 0.2)
-		chapadao=lerp(chapadao,0.0,delta/4)
+		chapadao=lerp(chapadao*1.001,0.0,delta/4)
 		
 	else:
 		saturation_anim.seek(0)
@@ -507,7 +508,7 @@ func CallCamera(target_node: Node, delta: float, base_speed: float, max_rotation
 		# Calculate the angle between player's forward direction and direction to target
 		var angle_to_target = atan2(direction_to_target.z, denominator) - atan2(player_forward.z, player_forward.x)
 		# Smoothly rotate towards the angle to the target
-		var rotationy = Camera.rotation.x/10.0
+		var rotationy = Camera.rotation.x/base_speed
 		CameraLook(Vector2(angle_to_target / base_speed, rotationy/ base_speed))
 
 func fade(time = 1):
@@ -541,11 +542,12 @@ func CollectedCoin(node,n):
 
 func _on_button_pressed():
 	gameStart=false
+	rootNode.timepasses=false
 	$ApMusic.volume_db=-20.0
 	fade(0.03)
 	CallCamera(cat,1,1.0)
 	global_transform.origin=startGameTrigger.global_transform.origin
-	rootNode.time_of_day=6.0
+	rootNode.time_of_day=20.0
 	$Ui/Main_Sight.visible=true
 	$Ui/StartGame.visible=false
 	paused=false

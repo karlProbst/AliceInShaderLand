@@ -1,4 +1,4 @@
-[gd_scene load_steps=130 format=3 uid="uid://oc13h3au02ro"]
+[gd_scene load_steps=131 format=3 uid="uid://oc13h3au02ro"]
 
 [ext_resource type="Script" path="res://scripts/Player_Character/player_character.gd" id="1_dwwa2"]
 [ext_resource type="Script" path="res://scripts/Player_Character/HUD.gd" id="2_beh8p"]
@@ -14,6 +14,7 @@
 [ext_resource type="Texture2D" uid="uid://cvmn25p6pdtuo" path="res://Textures/alice_back_only.png" id="9_dm6ar"]
 [ext_resource type="Script" path="res://FpsTemplate/AnimationPlayer.gd" id="10_3ppyo"]
 [ext_resource type="Texture2D" uid="uid://baeloprrhxai7" path="res://Textures/RegadorBlue.tres" id="10_b5gab"]
+[ext_resource type="Texture2D" uid="uid://hcj2cuc6vhus" path="res://Textures/star.png" id="13_6ragb"]
 [ext_resource type="AnimationLibrary" uid="uid://uybino34n0sj" path="res://FpsTemplate/weapon_animation.res" id="13_lmhsg"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_bu4qy"]
@@ -2009,6 +2010,25 @@ speed_scale = 7.625
 layout_mode = 2
 
 [node name="Node2D" type="Node2D" parent="Ui"]
+
+[node name="Died" type="StaticBody2D" parent="Ui"]
+position = Vector2(640, 360)
+scale = Vector2(0.01, 0.01)
+
+[node name="Died" type="Label" parent="Ui/Died"]
+offset_left = -70.6255
+offset_top = -24.1026
+offset_right = 74.3745
+offset_bottom = 19.8974
+text = "YOU DIED"
+label_settings = SubResource("LabelSettings_57ljr")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Sprite2D" type="Sprite2D" parent="Ui/Died"]
+position = Vector2(0.00610352, 0.00305176)
+scale = Vector2(0.04, 0.04)
+texture = ExtResource("13_6ragb")
 
 [node name="Node3D" type="Node3D" parent="."]
 

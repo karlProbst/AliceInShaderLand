@@ -2,7 +2,7 @@ extends CharacterBody3D
 
 var max_speed: float = 2.0  # Maximum speed at which the cat can move
 var current_speed: float = 0.0  # Current speed of the cat, starts at 0
-var acceleration: float = 0.1  # Acceleration rate when on a straight path
+var acceleration: float = 0.06  # Acceleration rate when on a straight path
 var deceleration: float = 2.5  # Deceleration rate when turning
 var rotation_speed: float = 3.0  # Speed of rotation towards the velocity direction
 var gravity: float = -9.8  # Acceleration due to gravity (m/s^2)
@@ -13,18 +13,23 @@ var random_run_duration: float = 0.0  # Duration for running in a random directi
 var low_velocity_timer = 0.0
 var spd =  0
 var idle_sit_timer = 0.0
-var stuck = true
+var stuck = 9999.0
 @onready var target: Node = get_parent().get_node("Player_Character")
 @onready var raycastr: RayCast3D = $RayCast3DR
 @onready var raycastl: RayCast3D = $RayCast3DL
 @onready var raycast: RayCast3D = $RayCast3D
 @onready var anim_player: AnimationPlayer = $cat/AnimationPlayer
+@onready var Puff: Node = get_parent().get_node("AP/Puff")
+@onready var rootNode = get_tree().get_root().get_node("World")
 var playerdied=false
 var playerdied_timer=0
 var adkd=0
 @onready var player=target
+var goSleep=false
+var sleeping=false
 func _physics_process(delta):
 	if playerdied:
+		player.ui.get_node("Died").scale=player.ui.get_node("Died").scale*(1+delta*3)
 		player.fade(1)
 		player.CallCamera(self,delta,1.0)
 		playerdied_timer+=delta
@@ -32,6 +37,23 @@ func _physics_process(delta):
 			player.fade(1)
 		if playerdied_timer>6:	
 			get_tree().quit()
+	
+	if sleeping:
+		switch_animation("Idle3",1)
+		stuck=1
+		global_transform.origin=Puff.global_transform.origin-Vector3(0,-0.5,0)
+		if rootNode.time_of_day>=12:
+			target=player
+			stop_radius=3.0
+			sleeping=false
+	if goSleep:
+		stop_radius=0.2
+		target=Puff
+	if rootNode.time_of_day >= 6 and rootNode.time_of_day < 6.1 and !player.gameStart and stuck<=0:
+		goSleep=true
+	
+	print(str(goSleep)+str(sleeping))
+		
 	if target:
 		
 			
@@ -40,15 +62,16 @@ func _physics_process(delta):
 		var distance_to_target = global_transform.origin.distance_to(target_position)
 		var direction = (target_position - global_transform.origin).normalized()
 		var flat_direction = Vector3(direction.x, 0, direction.z).normalized()
-
-		if distance_to_target < stop_radius:
+		print(distance_to_target)
+		if distance_to_target <= stop_radius:
 			Touching()
 			idle_sit_timer+=delta
 			
-			if idle_sit_timer>3.0:
-				switch_animation("Idle2", 1.0)
-			else:
-				switch_animation("Idle", 1.0)
+			if !sleeping:
+				if idle_sit_timer>3.0:
+					switch_animation("Idle2", 1.0)
+				else:
+					switch_animation("Idle", 1.0)
 			return	
 		
 			
@@ -56,6 +79,10 @@ func _physics_process(delta):
 		var move_direction = flat_direction
 		var avoidance_force = Vector3.ZERO
 		if raycast.is_colliding():
+			var collider=raycast.get_collider()
+			if goSleep and collider:
+				if collider.is_in_group("Puff") and goSleep:
+					sleeping=true
 			var hit_normal = raycast.get_collision_normal()
 			avoidance_force = hit_normal * max_speed
 			move_direction = (flat_direction + avoidance_force).normalized()
@@ -77,13 +104,16 @@ func _physics_process(delta):
 		velocity.x = move_direction.x * current_speed 
 		velocity.z = move_direction.z * current_speed
 		velocity.y += gravity * delta
-		if !stuck:
+		if stuck<=0:
 			move_and_slide()
 		else:
-			switch_animation("Idle2", 1.0)
+			if stuck>-1:
+				stuck-=delta
+			if !sleeping:
+				switch_animation("Idle2", 1.0)
 			rotateCat(delta)
 		# Animation and rotation
-		if velocity.length() > 0.1 and not stuck:
+		if velocity.length() > 0.1 and stuck<=0 :
 			
 			var speed_scale = current_speed / max_speed  # Calculate speed scale
 			switch_animation("Run", speed_scale*5.0)
@@ -109,10 +139,12 @@ func rotateCat(delta):
 		rotation_angle -= PI / 2
 		global_transform.basis = global_transform.basis.rotated(rotation_axis, rotation_angle * rotation_speed * delta)
 func Touching():
-
-	if stop_radius==0.3:
-		
-		playerdied=true
+	if goSleep:
+		sleeping=true
+		goSleep=false
+	else:
+		if stop_radius<1 and rootNode.death:
+			playerdied=true		
 func set_emission_energy_on():
 	#var anim = $cat/Armature/Skeleton3D/mesh_cat/AnimationPlayer
 	#anim.play("glow")

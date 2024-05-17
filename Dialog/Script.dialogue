@@ -10,8 +10,14 @@ Gato: Se você pretende cuidar das plantas, a primeira coisa que precisa é de u
 	Gato: Anda logo humano.
 	set enteringApTrigger=false
 	=> end_conversation	
+~ gatoMortal
+set stuck = true
 
+Gato: Voce está apetitoso desse tamanho humano.
+Gato: >:3
 
+set catAtackTrigger=false
+=> end_conversation	
 ~ end_conversation
 set stuck = false
 => END

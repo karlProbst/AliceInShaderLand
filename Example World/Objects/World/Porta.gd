@@ -37,7 +37,6 @@ func _physics_process(delta):
 						DialogueManager.show_example_dialogue_balloon(gameScript,"start")
 						dialog=true
 	elif dialog:
-		cat.stuck=false
 		if apMusic.volume_db<-8:
 			apMusic.volume_db+=delta*.15
 		else:
