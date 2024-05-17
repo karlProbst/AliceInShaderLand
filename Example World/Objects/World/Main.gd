@@ -1,7 +1,7 @@
 extends Node3D
 
 # Timer for the day cycle
-var day_length = 120.0  # Day length in seconds (how long a full 24-hour cycle takes in real time)
+var day_length = 30.0  # Day length in seconds (how long a full 24-hour cycle takes in real time)
 var time_of_day = 20.0  # Current time of day in hours
 @onready var environment : WorldEnvironment = $WorldEnvironment
 @onready var sunMoon = $DirectionalLight3D
@@ -64,7 +64,7 @@ func _process(delta):
 		time_of_day -= 24.0  # Normalize time of day after it reaches 24 hours
 	
 	if time_of_day>23 and time_of_day<24 and spawn:
-		get_node("EtScapeLook").spawn_et(day*day)
+		get_node("EtScapeLook").spawn_et(day*day*10)
 		spawn=false
 	# Calculate and set the rotation of the sun/moon light
 	sunMoon.rotation_degrees.x = calculate_rotation(time_of_day)
@@ -78,7 +78,7 @@ func _on_colisor_body_entered(body):
 		get_node("Lanterna/OmniLight3D").omni_range=get_node("Lanterna/OmniLight3D").omni_range-0.3
 		get_node("Lanterna/AudioStreamPlayer3D").play()
 		if(lanternLives<=0):
-			get_node("Player_Character").chapadao+=50
+			get_node("Player_Character").chapadao=30
 			death=true
 		body.queue_free()
 		

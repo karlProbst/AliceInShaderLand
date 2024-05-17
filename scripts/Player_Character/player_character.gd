@@ -545,6 +545,7 @@ func _on_button_pressed():
 	fade(0.03)
 	CallCamera(cat,1,1.0)
 	global_transform.origin=startGameTrigger.global_transform.origin
+	rootNode.time_of_day=6.0
 	$Ui/Main_Sight.visible=true
 	$Ui/StartGame.visible=false
 	paused=false

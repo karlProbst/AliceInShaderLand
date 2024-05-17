@@ -53,6 +53,7 @@ light_energy = 1.445
 [node name="CPUParticles3D" type="CPUParticles3D" parent="."]
 emitting = false
 amount = 1
+lifetime = 5.0
 one_shot = true
 mesh = SubResource("PlaneMesh_v7uri")
 gravity = Vector3(0, 0, 0)

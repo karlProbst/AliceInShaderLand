@@ -8,7 +8,7 @@ func _ready():
 func spawn_et(n):
 	
 	for i in range(n):
-		var locationVec=self.global_transform.origin+Vector3(randf_range(-10,10),randf_range(-10,10),randf_range(-10,10))
+		var locationVec=self.global_transform.origin+Vector3(randf_range(-2,2),randf_range(-2,2),randf_range(-2,2))
 		var et = et_scene.instantiate()
 		add_child(et)  # Add coin to the scene tree
 		et.set_global_position(locationVec) # Randomize the spawn location

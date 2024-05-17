@@ -22,8 +22,8 @@ func _physics_process(delta):
 				
 				player.CallCamera(cat,delta,10.0,10.0)
 				#musica abaixa
-			if corredorMusic.volume_db>-20:
-				corredorMusic.volume_db-=delta*10
+			if corredorMusic.volume_db>-40:
+				corredorMusic.volume_db-=delta*20
 			else:
 			#falando com gato
 				if apMusic.volume_db<=-20:
