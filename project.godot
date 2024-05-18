@@ -10,7 +10,7 @@ config_version=5
 
 [application]
 
-config/name="Alice in Shaderland"
+config/name="RoomRooom"
 run/main_scene="res://Example World/Objects/World/world.tscn"
 config/features=PackedStringArray("4.2", "Forward Plus")
 config/icon="res://Textures/Title.png"

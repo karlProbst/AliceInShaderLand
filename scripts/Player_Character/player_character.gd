@@ -96,8 +96,10 @@ var waterMax=4
 var cursortrue=0
 var gameStart=true
 var raioLaser=false
-var laser = true
+var laser = false
 var isLaserOn = false
+var interface="none"
+var isRegadorTunado = false
 @onready var box_mesh = get_node("../boxMesh")
 func refillWater():
 	water=waterMax
@@ -126,13 +128,19 @@ func StartMenu():
 		Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
 		paused=false
 	if(paused):
-		$Ui/Start.visible=true
+		if interface=="none":
+			$Ui/Start.visible=true
+		elif interface=="pc":
+			$Ui/Pc.visible=true
+		
 		$Ui/Hit_Sight.visible=false
 		$Ui/Interaction.visible=false
 		$Ui/Main_Sight.visible=false
 		$Ui/BlurVignette.material.set_shader_parameter("blur_radius", 1)
 		$Ui/BlurVignette.material.set_shader_parameter("blur_amount", 5.0)
 	else:
+		interface="none"
+		$Ui/Pc.visible=false
 		$Ui/BlurVignette.material.set_shader_parameter("blur_radius", 0.2)
 		$Ui/BlurVignette.material.set_shader_parameter("blur_amount", 1.0)
 		$Ui/Start.visible=false
@@ -529,7 +537,7 @@ func CallCamera(target_node: Node, delta: float, base_speed: float, max_rotation
 		# Calculate the angle between player's forward direction and direction to target
 		var angle_to_target = atan2(direction_to_target.z, denominator) - atan2(player_forward.z, player_forward.x)
 		# Smoothly rotate towards the angle to the target
-		var rotationy = Camera.rotation.x/base_speed
+		var rotationy = Camera.rotation.x/base_speed*10
 		CameraLook(Vector2(angle_to_target / base_speed, rotationy/ base_speed))
 
 func fade(time = 1):
@@ -587,3 +595,15 @@ func _on_back_to_menu_pressed():
 
 	
 
+
+
+func _on_laser_pressed():
+	if money>=100 and laser==false:
+		laser=true
+		money-=100
+
+
+func _on_regador_pressed():
+	if money>=70 and !isRegadorTunado:
+		water=999
+		money-=70

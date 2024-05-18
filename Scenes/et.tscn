@@ -70,7 +70,7 @@ texture = ExtResource("3_a80qx")
 [node name="redShine" type="Sprite3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.175532)
 offset = Vector2(-13.81, 10.195)
-modulate = Color(0.917647, 0, 0.180392, 0.937255)
+modulate = Color(0.917647, 0, 0.180392, 0.854902)
 billboard = 1
 texture = SubResource("CompressedTexture2D_5es3n")
 

@@ -2,7 +2,9 @@
 
 set stuck = true
 Gato: Olá humano.
+Gato: Meu dono te deixou cuidar de tudo por aqui? não estou impressionado
 Gato: Se você pretende cuidar das plantas, a primeira coisa que precisa é de um regador.
+
 - É pra já!
 	set enteringApTrigger=false
 	=> end_conversation
@@ -14,8 +16,7 @@ Gato: Se você pretende cuidar das plantas, a primeira coisa que precisa é de u
 set stuck = true
 
 Gato: Voce está apetitoso desse tamanho humano.
-Gato: >:3
-
+Gato: Não se mova!
 set catAtackTrigger=false
 => end_conversation	
 ~ end_conversation

@@ -16,7 +16,7 @@ func _physics_process(delta):
 	if $shine.scale.x>1:
 		$shine.scale/=1+(delta/2)
 	if $redShine.scale.x>0:
-		$redShine.scale/=1+(delta*3)
+		$redShine.scale/=1+(delta*6)
 	if node:
 		look_at(node.global_transform.origin,Vector3(0,1,0),true)
 
@@ -36,7 +36,7 @@ func killEt(n):
 	life-=n
 	if life<=0:
 		queue_free()
-	$redShine.scale=Vector3(1,1,1)
+	$redShine.scale=Vector3(2,2,2)
 	
 
 
