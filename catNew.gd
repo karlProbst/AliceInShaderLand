@@ -119,7 +119,7 @@ func _physics_process(delta):
 			idle_sit_timer=0.0
 			rotateCat(delta*2)
 		else:
-			if not stuck:
+			if  stuck<=0:
 				switch_animation("Idle", 1.0)
 func switch_animation(animation_name: String, speed_scale: float):
 	

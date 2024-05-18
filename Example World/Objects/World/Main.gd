@@ -1,11 +1,11 @@
 extends Node3D
 
 # Timer for the day cycle
-var day_length = 30.0  # Day length in seconds (how long a full 24-hour cycle takes in real time)
+var day_length = 180.0  # Day length in seconds (how long a full 24-hour cycle takes in real time)
 var time_of_day = 20.0  # Current time of day in hours
 @onready var environment : WorldEnvironment = $WorldEnvironment
 @onready var sunMoon = $DirectionalLight3D
-var day = 0
+var day = 1
 var lanternLives=10
 var death = false
 var deathtimer=0
@@ -34,7 +34,8 @@ func _ready():
 
 
 func _process(delta):
-	 
+	if day>=7:
+		pass	
 	if death:
 		
 		deathtimer+=delta*5
@@ -62,19 +63,25 @@ func _process(delta):
 				get_node("Player_Character").CallCamera(get_node("cat"),delta,2.0)
 		
 	
-	time_of_day += (delta / day_length) * 24.0 
+	if timepasses:
+		time_of_day += (delta / day_length) * 24.0 
 	if time_of_day >= 24.0:
 		if !death:
-			day+=1
+			if !get_node("Player_Character").gameStart:
+				day+=1
+				get_node("Player_Character/Ui/Dia/CurrentDia").text=str(day)
 			spawn=true
+			
+		get_tree().get_root().get_node("World/AP/Plants").resetPlants()
 		time_of_day -= 24.0 
+		
 
 	if time_of_day>0 and time_of_day<1 and spawn and !get_node("Player_Character").gameStart:
 		get_node("EtScapeLook").spawn_et(day*day*2)
 		spawn=false
 	sunMoon.rotation_degrees.x = calculate_rotation(time_of_day)
 	$AP/Clock.set_time(time_of_day)
-
+	
 
 func _on_colisor_body_entered(body):	
 	if body.is_in_group("Et"):

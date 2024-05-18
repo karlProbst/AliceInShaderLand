@@ -101,8 +101,12 @@ var isLaserOn = false
 var interface="none"
 var isRegadorTunado = false
 @onready var box_mesh = get_node("../boxMesh")
+var coin_scene3D = preload("res://Assets 3d/Coin.tscn")
+
+
 func refillWater():
-	water=waterMax
+	if water<waterMax:
+		water=waterMax
 func _ready():
 	defaultFov = $Camera/lean_pivot/MainCamera.fov
 	$Camera/glassass.mesh.material.set_shader_parameter("distortion_size",0)
@@ -132,7 +136,9 @@ func StartMenu():
 			$Ui/Start.visible=true
 		elif interface=="pc":
 			$Ui/Pc.visible=true
-		
+		elif interface=="note":
+			$Ui/Note.visible=true
+			
 		$Ui/Hit_Sight.visible=false
 		$Ui/Interaction.visible=false
 		$Ui/Main_Sight.visible=false
@@ -140,6 +146,7 @@ func StartMenu():
 		$Ui/BlurVignette.material.set_shader_parameter("blur_amount", 5.0)
 	else:
 		interface="none"
+		$Ui/Note.visible=false
 		$Ui/Pc.visible=false
 		$Ui/BlurVignette.material.set_shader_parameter("blur_radius", 0.2)
 		$Ui/BlurVignette.material.set_shader_parameter("blur_amount", 1.0)
@@ -311,7 +318,7 @@ func _physics_process(delta):
 		
 		catHipnose-=delta
 		CallCamera(cat,delta,1.0,10.0)
-		cat.stuck=true
+		cat.stuck=1
 		cat.global_position=Vector3(0.277,3.5,12.064)
 		self.global_position=Vector3(-1.722,3.6,12.064)
 		scale_var=scale_var_default/3
@@ -376,6 +383,8 @@ func _physics_process(delta):
 	#		print("distance_to_hit")
 
 	dot.global_transform.origin=Vector3(0,0,0)
+	if global_transform.origin.y<-100:
+		cat.playerdied=true
 	if(!paused):
 		if rayIntLong.is_colliding():
 			var collision = rayIntLong.get_collider()
@@ -384,6 +393,7 @@ func _physics_process(delta):
 				if isLaserOn:
 					dot.global_transform.origin=rayIntLong.get_collision_point()
 					if collision.is_in_group("Et"):
+						spawn_coins(20,collision.global_transform.origin)
 						collision.killEt(1)
 				if collision.is_in_group("Coin"):
 					CollectedCoin(collision,1)
@@ -523,21 +533,17 @@ func CameraLook(Movement: Vector2):
 
 	
 func CallCamera(target_node: Node, delta: float, base_speed: float, max_rotation_speed: float = 0.1):
-	# Get the target node's global position
+
 	if target_node:
 		var target_global_position = target_node.global_transform.origin
 		var player_rotation_y = rotation.y
-		# Get the player's forward direction based on rotation
 		var player_forward = Vector3(sin(player_rotation_y), 0, cos(player_rotation_y))
-		# Calculate the direction to the target node
 		var direction_to_target = global_transform.origin - target_global_position
-		direction_to_target.y = 0  # Ensure no vertical movement
-		# Add a small epsilon to denominator to avoid division by zero
+		direction_to_target.y = 0
 		var denominator = direction_to_target.x + 0.0001
-		# Calculate the angle between player's forward direction and direction to target
 		var angle_to_target = atan2(direction_to_target.z, denominator) - atan2(player_forward.z, player_forward.x)
-		# Smoothly rotate towards the angle to the target
-		var rotationy = Camera.rotation.x/base_speed*10
+
+		var rotationy = Camera.rotation.x
 		CameraLook(Vector2(angle_to_target / base_speed, rotationy/ base_speed))
 
 func fade(time = 1):
@@ -600,10 +606,21 @@ func _on_back_to_menu_pressed():
 func _on_laser_pressed():
 	if money>=100 and laser==false:
 		laser=true
+		
 		money-=100
-
+	moneyCounter.text=str(money)
 
 func _on_regador_pressed():
 	if money>=70 and !isRegadorTunado:
 		water=999
 		money-=70
+	moneyCounter.text=str(money)
+
+func spawn_coins(n,locationVec):
+	for i in range(n):
+		var coin3D = coin_scene3D.instantiate()
+		rootNode.add_child(coin3D)  # Add coin to the scene tree
+		coin3D.set_global_position(locationVec) # Randomize the spawn location
+		var impulse = Vector3(randf_range(-1, 1), randf_range(0, 0.5), randf_range(-1, 1))
+		# Apply an initial upward force
+		coin3D.apply_impulse(impulse, impulse)  # Adjust the range as needed
