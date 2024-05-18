@@ -1,4 +1,4 @@
-[gd_scene load_steps=131 format=3 uid="uid://oc13h3au02ro"]
+[gd_scene load_steps=138 format=3 uid="uid://oc13h3au02ro"]
 
 [ext_resource type="Script" path="res://scripts/Player_Character/player_character.gd" id="1_dwwa2"]
 [ext_resource type="Script" path="res://scripts/Player_Character/HUD.gd" id="2_beh8p"]
@@ -16,6 +16,8 @@
 [ext_resource type="Texture2D" uid="uid://baeloprrhxai7" path="res://Textures/RegadorBlue.tres" id="10_b5gab"]
 [ext_resource type="Texture2D" uid="uid://hcj2cuc6vhus" path="res://Textures/star.png" id="13_6ragb"]
 [ext_resource type="AnimationLibrary" uid="uid://uybino34n0sj" path="res://FpsTemplate/weapon_animation.res" id="13_lmhsg"]
+[ext_resource type="Texture2D" uid="uid://diek6k2k8fhha" path="res://Example World/Models/Textures/prototype texture/Light/texture_08.png" id="15_tafkv"]
+[ext_resource type="Texture2D" uid="uid://c5jem0w0l3u8v" path="res://Example World/Models/Textures/prototype texture/Orange/texture_11.png" id="16_562db"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_bu4qy"]
 
@@ -635,6 +637,7 @@ color_ramp = SubResource("Gradient_fl5ut")
 noise = SubResource("FastNoiseLite_a4x57")
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_0xkr0"]
+cull_mode = 2
 depth_draw_mode = 1
 albedo_color = Color(0.337255, 0.862745, 0.890196, 1)
 albedo_texture = SubResource("NoiseTexture2D_l3lkp")
@@ -670,6 +673,32 @@ _surfaces = [{
 }]
 blend_shape_mode = 0
 shadow_mesh = SubResource("ArrayMesh_tefy5")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_yhktm"]
+albedo_color = Color(1, 0.764706, 0.2, 1)
+albedo_texture = ExtResource("15_tafkv")
+metallic = 1.0
+metallic_specular = 0.51
+metallic_texture = ExtResource("16_562db")
+uv1_scale = Vector3(-0.32, -0.47, 9.185)
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_nlo1d"]
+material = SubResource("StandardMaterial3D_yhktm")
+radius = 0.1
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_j3a0a"]
+transparency = 1
+no_depth_test = true
+shading_mode = 0
+albedo_color = Color(1, 0, 0, 0.482353)
+albedo_texture = ExtResource("13_6ragb")
+uv1_offset = Vector3(0.03, 0.04, 0)
+billboard_mode = 1
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_xoxgq"]
+material = SubResource("StandardMaterial3D_j3a0a")
+size = Vector2(0.3, 0.3)
+orientation = 2
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_y4lj6"]
 no_depth_test = true
@@ -788,9 +817,13 @@ tracks/1/keys = {
 "values": [Vector3(0.00643762, -3.04337, 0.000655333), Vector3(0.734635, -3.00906, 0.0891481), Vector3(0.00643762, -3.04337, 0.000655333)]
 }
 
+[sub_resource type="Animation" id="Animation_ylvhx"]
+resource_name = "Laser"
+
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_qfrye"]
 _data = {
 "Enchendo": SubResource("Animation_17gdh"),
+"Laser": SubResource("Animation_ylvhx"),
 "RESET": SubResource("Animation_qrkbc"),
 "Regando": SubResource("Animation_3vtd2")
 }
@@ -2069,6 +2102,14 @@ transform = Transform3D(0.18, 0, 0, 0, 0.18, 3.72529e-09, 0, 0, 0.18, 0, 0, 0)
 mesh = SubResource("ArrayMesh_qyd4f")
 skeleton = NodePath("")
 
+[node name="Laser" type="MeshInstance3D" parent="Camera/lean_pivot/MainCamera/Weapons_Manager/Regador/Corpo"]
+transform = Transform3D(1, 4.13756e-08, -5.01133e-08, -7.96969e-08, 0.213386, -0.887249, -5.14902e-08, 0.473282, 0.400031, 0.897452, 0.487852, 1.2652)
+mesh = SubResource("CapsuleMesh_nlo1d")
+
+[node name="shine" type="MeshInstance3D" parent="Camera/lean_pivot/MainCamera/Weapons_Manager/Regador/Corpo/Laser"]
+transform = Transform3D(1, 6.66134e-16, 1.36002e-15, 1.77636e-15, 1, 0, 1.96509e-14, -5.58794e-09, 1, 0, 1.01588, 0.0301352)
+mesh = SubResource("PlaneMesh_xoxgq")
+
 [node name="Alça" type="MeshInstance3D" parent="Camera/lean_pivot/MainCamera/Weapons_Manager/Regador"]
 transform = Transform3D(0.18, 0, 0, 0, 0.18, 0, 0, 0, 0.18, 0, 0, 0.0219168)
 mesh = SubResource("ArrayMesh_70vgk")
@@ -2152,11 +2193,12 @@ collision_mask = 5
 
 [node name="RayInt" type="RayCast3D" parent="Camera" groups=["Ray"]]
 transform = Transform3D(1, 0, 0, 0, -6.46066e-08, -1, 0, 1.47803, -4.37114e-08, -0.00514133, 0.00171393, -0.102608)
+visible = false
 collision_mask = 129
 collide_with_areas = true
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Camera/RayInt"]
-transform = Transform3D(0.007172, 0, 0, 0, 1.05863, 6.66134e-16, 0, 1.28786e-14, 0.00428869, 0, -0.461398, -0.000373561)
+transform = Transform3D(0.007172, 0, 0, 0, 1.05863, 6.66134e-16, 0, 1.42109e-14, 0.00428869, 0, -0.461398, -0.000373483)
 visible = false
 mesh = SubResource("BoxMesh_d6xdl")
 
@@ -2165,7 +2207,7 @@ transform = Transform3D(1, 0, 0, 0, -3.0598e-07, -1, 0, 7, -4.37114e-08, -0.0051
 collision_mask = 7
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Camera/RayInt2" groups=["Ray"]]
-transform = Transform3D(0.007172, 0, 0, 0, 1.05863, 6.66134e-16, 0, 1.28786e-14, 0.00428869, 0, -0.461398, -0.000373561)
+transform = Transform3D(0.007172, 0, 0, 0, 1.05863, 6.66134e-16, 0, 0, 0.00428869, 0, -0.461398, -0.000373542)
 visible = false
 mesh = SubResource("BoxMesh_d6xdl")
 

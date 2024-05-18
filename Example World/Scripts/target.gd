@@ -31,8 +31,8 @@ func grow():
 	player.rootNode.time_of_day=6.5
 	player.fade()
 	player.global_position=Vector3(-0.1,3.5,13.72)
-	get_node("cat").stop_radius=1.0
-	rootNode.lanternLives=10
+	cat.stop_radius=1.0
+	rootNode.lanternLives=1
 	rootNode.death=false
 
 func _process(delta):

@@ -69,8 +69,8 @@ func _process(delta):
 			spawn=true
 		time_of_day -= 24.0 
 
-	if time_of_day>2 and time_of_day<3 and spawn:
-		get_node("EtScapeLook").spawn_et(day*day*10)
+	if time_of_day>0 and time_of_day<1 and spawn and !get_node("Player_Character").gameStart:
+		get_node("EtScapeLook").spawn_et(day*day*2)
 		spawn=false
 	sunMoon.rotation_degrees.x = calculate_rotation(time_of_day)
 	$AP/Clock.set_time(time_of_day)

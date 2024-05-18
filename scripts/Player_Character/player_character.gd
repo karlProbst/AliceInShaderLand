@@ -70,6 +70,7 @@ var Speed_Modifier: float = NORMAL_SPEED
 @onready var cat = get_node("../cat")
 @onready var rootNode = get_tree().get_root().get_node("World")
 var coin_scene = preload("res://coin2D.tscn")
+@onready var dot = get_node("../dot")
 # Get the gravity from the project settings to be synced with RigidBody nodes.
 var Jump_Gravity = ProjectSettings.get_setting("physics/3d/default_gravity")
 var Fall_Gravity: float
@@ -95,6 +96,9 @@ var waterMax=4
 var cursortrue=0
 var gameStart=true
 var raioLaser=false
+var laser = true
+var isLaserOn = false
+@onready var box_mesh = get_node("../boxMesh")
 func refillWater():
 	water=waterMax
 func _ready():
@@ -107,7 +111,7 @@ func _ready():
 	Update_CameraRotation()
 	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
 	Calculate_Movement_Parameters()
-
+	
 func Update_CameraRotation():
 	var current_rotation = get_rotation()
 	CameraRotation.x = current_rotation.y
@@ -363,15 +367,19 @@ func _physics_process(delta):
 	#	if distance_to_hit > 2:
 	#		print("distance_to_hit")
 
-
+	dot.global_transform.origin=Vector3(0,0,0)
 	if(!paused):
 		if rayIntLong.is_colliding():
 			var collision = rayIntLong.get_collider()
 			if collision:
+				
+				if isLaserOn:
+					dot.global_transform.origin=rayIntLong.get_collision_point()
+					if collision.is_in_group("Et"):
+						collision.killEt(1)
 				if collision.is_in_group("Coin"):
 					CollectedCoin(collision,1)
-				if collision.is_in_group("Et"):
-					KillEt(collision)
+				
 		if rayInt.is_colliding():
 			var collision = rayInt.get_collider()
 			if collision:
@@ -407,6 +415,19 @@ func _physics_process(delta):
 				Jump_Buffer = false
 		
 		# Handle Jump.
+		if Input.is_action_pressed("Shoot") and laser and stuck<=0 and !paused and hasRegador:
+			isLaserOn=true		
+		else:
+			isLaserOn=false
+		if laser:
+			$Camera/lean_pivot/MainCamera/Weapons_Manager/Regador/Corpo/Laser.visible=true
+		else:
+			$Camera/lean_pivot/MainCamera/Weapons_Manager/Regador/Corpo/Laser.visible=false
+		if isLaserOn:
+			$Camera/lean_pivot/MainCamera/Weapons_Manager/Regador/Corpo/Laser/shine.visible=true
+		else:
+			$Camera/lean_pivot/MainCamera/Weapons_Manager/Regador/Corpo/Laser/shine.visible=false
+		
 		if Input.is_action_just_pressed("ui_accept"):
 			if Jump_Available:
 				Jump()
@@ -563,7 +584,6 @@ func _on_quit_button_pressed():
 func _on_back_to_menu_pressed():
 	get_tree().quit()
 
-func KillEt(node):
-	if raioLaser:
-		node.queue_free()
+
 	
+

@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3 uid="uid://miavoehip0bf"]
+[gd_scene load_steps=9 format=3 uid="uid://miavoehip0bf"]
 
 [ext_resource type="Script" path="res://Et.gd" id="1_4uxkm"]
 [ext_resource type="Texture2D" uid="uid://bsgsoyuj38x7l" path="res://Textures/et.png" id="2_12hvk"]
@@ -10,7 +10,6 @@ bounce = 1.0
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_n8sty"]
 transparency = 1
-no_depth_test = true
 shading_mode = 0
 specular_mode = 2
 disable_ambient_light = true
@@ -24,26 +23,11 @@ material = SubResource("StandardMaterial3D_n8sty")
 size = Vector2(0.9, 0.9)
 orientation = 2
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_5gn8m"]
-transparency = 1
-no_depth_test = true
-shading_mode = 0
-specular_mode = 2
-disable_ambient_light = true
-disable_fog = true
-albedo_color = Color(0, 1, 0.0666667, 1)
-albedo_texture = ExtResource("3_a80qx")
-uv1_offset = Vector3(0.035, 0.045, 0)
-disable_receive_shadows = true
-billboard_mode = 1
-
-[sub_resource type="PlaneMesh" id="PlaneMesh_1n4wb"]
-material = SubResource("StandardMaterial3D_5gn8m")
-size = Vector2(10, 10)
-orientation = 2
-
 [sub_resource type="SphereShape3D" id="SphereShape3D_vumx1"]
 radius = 0.383861
+
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_5es3n"]
+load_path = "res://.godot/imported/star.png-413c91368113d0b29524eb063a10054a.s3tc.ctex"
 
 [node name="Et" type="RigidBody3D" groups=["Et"]]
 collision_layer = 642
@@ -51,15 +35,11 @@ collision_mask = 642
 mass = 0.01
 physics_material_override = SubResource("PhysicsMaterial_fqrxw")
 gravity_scale = 0.0
+can_sleep = false
 script = ExtResource("1_4uxkm")
 
 [node name="bill" type="MeshInstance3D" parent="."]
 mesh = SubResource("PlaneMesh_gudd2")
-skeleton = NodePath("")
-
-[node name="shine" type="MeshInstance3D" parent="."]
-transform = Transform3D(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
-mesh = SubResource("PlaneMesh_1n4wb")
 skeleton = NodePath("")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
@@ -75,9 +55,24 @@ one_shot = true
 autostart = true
 
 [node name="die" type="Timer" parent="."]
-wait_time = 50.0
+wait_time = 93.883
 one_shot = true
 autostart = true
+
+[node name="shine" type="Sprite3D" parent="."]
+transform = Transform3D(5, 0, 0, 0, 5, 0, 0, 0, 5, 0, 0, 0)
+offset = Vector2(-13.81, 10.195)
+modulate = Color(0, 0.6, 0, 0.870588)
+billboard = 1
+no_depth_test = true
+texture = ExtResource("3_a80qx")
+
+[node name="redShine" type="Sprite3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.175532)
+offset = Vector2(-13.81, 10.195)
+modulate = Color(0.917647, 0, 0.180392, 0.937255)
+billboard = 1
+texture = SubResource("CompressedTexture2D_5es3n")
 
 [connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]
 [connection signal="timeout" from="die" to="." method="_on_die_timeout"]

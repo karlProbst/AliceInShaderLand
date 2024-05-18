@@ -52,7 +52,7 @@ func _physics_process(delta):
 	if rootNode.time_of_day >= 6 and rootNode.time_of_day < 6.1 and !player.gameStart and stuck<=0:
 		goSleep=true
 	
-	print(str(goSleep)+str(sleeping))
+
 		
 	if target:
 		
@@ -62,7 +62,6 @@ func _physics_process(delta):
 		var distance_to_target = global_transform.origin.distance_to(target_position)
 		var direction = (target_position - global_transform.origin).normalized()
 		var flat_direction = Vector3(direction.x, 0, direction.z).normalized()
-		print(distance_to_target)
 		if distance_to_target <= stop_radius:
 			Touching()
 			idle_sit_timer+=delta

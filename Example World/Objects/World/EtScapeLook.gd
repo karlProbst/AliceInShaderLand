@@ -6,7 +6,7 @@ func _ready():
 	pass
 
 func spawn_et(n):
-	
+	$AnimationPlayer.play()
 	for i in range(n):
 		var locationVec=self.global_transform.origin+Vector3(randf_range(-2,2),randf_range(-2,2),randf_range(-2,2))
 		var et = et_scene.instantiate()
