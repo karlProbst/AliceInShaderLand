@@ -80,9 +80,7 @@ _data = {
 "new_animation": SubResource("Animation_0jpw6")
 }
 
-[node name="Coin" type="RigidBody3D" groups=["Coin", "Interactible"]]
-collision_layer = 2
-collision_mask = 2
+[node name="Coin" type="RigidBody3D" groups=["Coin"]]
 mass = 0.12
 physics_material_override = SubResource("PhysicsMaterial_56gpy")
 gravity_scale = 0.268

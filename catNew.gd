@@ -1,8 +1,8 @@
 extends CharacterBody3D
 
-var max_speed: float = 2.0  # Maximum speed at which the cat can move
+var max_speed: float = 1.55  # Maximum speed at which the cat can move
 var current_speed: float = 0.0  # Current speed of the cat, starts at 0
-var acceleration: float = 0.06  # Acceleration rate when on a straight path
+var acceleration: float = 0.035  # Acceleration rate when on a straight path
 var deceleration: float = 2.5  # Deceleration rate when turning
 var rotation_speed: float = 3.0  # Speed of rotation towards the velocity direction
 var gravity: float = -9.8  # Acceleration due to gravity (m/s^2)
@@ -35,8 +35,10 @@ func _physics_process(delta):
 		playerdied_timer+=delta
 		if playerdied_timer>5:
 			player.fade(1)
-		if playerdied_timer>6:	
-			get_tree().quit()
+		if playerdied_timer>6:
+			State.Reseta()	
+			get_tree().reload_current_scene()
+			
 	
 	if sleeping:
 		switch_animation("Idle3",1)
@@ -80,6 +82,7 @@ func _physics_process(delta):
 		if raycast.is_colliding():
 			var collider=raycast.get_collider()
 			if goSleep and collider:
+				State.catAtackTrigge=false
 				if collider.is_in_group("Puff") and goSleep:
 					sleeping=true
 			var hit_normal = raycast.get_collision_normal()

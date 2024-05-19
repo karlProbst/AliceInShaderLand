@@ -63,7 +63,7 @@ var Speed_Modifier: float = NORMAL_SPEED
 @onready var saturation_anim = get_node("../WorldEnvironment/Chapadao")
 @onready var startGameTrigger = get_node("../StartGameTrigger")
 @onready var startGameCameraLook = get_node("../StartGameCameraLook")
-@onready var eye = get_node("../AP/Porta/porta/Eye")
+@onready var eye = get_node("../AP/Porta/porta/eye")
 @onready var pot = null
 @onready var fx_drink = get_node("fx_drink")
 @onready var fx_coin = get_node("fx_coin")
@@ -105,8 +105,12 @@ var coin_scene3D = preload("res://Assets 3d/Coin.tscn")
 
 
 func refillWater():
+	regador.get_node("AnimationPlayer").stop()
+	regador.get_node("AnimationPlayer").play("Enchendo")
+	
 	if water<waterMax:
 		water=waterMax
+	$Ui/Water/CurrentWater.text=str(water)
 func _ready():
 	defaultFov = $Camera/lean_pivot/MainCamera.fov
 	$Camera/glassass.mesh.material.set_shader_parameter("distortion_size",0)
@@ -154,7 +158,12 @@ func StartMenu():
 		$Ui/Main_Sight.visible=true
 		$Ui/Interaction.visible=true
 func _input(event):
-	
+
+	if event.is_action_pressed("Melee"):
+		if DisplayServer.window_get_mode() == DisplayServer.WINDOW_MODE_WINDOWED:
+			DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_FULLSCREEN) 
+		else:
+			DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_WINDOWED) 
 	if event.is_action_pressed("ui_cancel") and !gameStart:
 		StartMenu()
 	if(!paused) and stuck<=0:
@@ -393,7 +402,7 @@ func _physics_process(delta):
 				if isLaserOn:
 					dot.global_transform.origin=rayIntLong.get_collision_point()
 					if collision.is_in_group("Et"):
-						spawn_coins(20,collision.global_transform.origin)
+						
 						collision.killEt(1)
 				if collision.is_in_group("Coin"):
 					CollectedCoin(collision,1)
@@ -425,7 +434,9 @@ func _physics_process(delta):
 		else:
 			Jump_Available = true
 			coyote_timer.stop()
-			_speed = (Speed / Speed_Modifier*scale_var.x)
+			_speed = (Speed / Speed_Modifier)
+			if scale_var==scale_var_min:
+				_speed = (Speed / Speed_Modifier*0.2)
 
 			
 			if Jump_Buffer:
@@ -553,6 +564,8 @@ func fade(time = 1):
 	
 func Regar():
 	water-=1
+	$Ui/Water/CurrentWater.text=str(water)
+	regador.get_node("AnimationPlayer").stop()
 	regador.get_node("AnimationPlayer").play("Regando")
 
 func spawn_coin_2d(node):
@@ -564,7 +577,7 @@ func CollectedCoin(node,n):
 	$Ui/Coins.visible=true
 	money+=1
 	moneyCounter.text=str(money)
-	fx_coin.play()
+	$fx_coin.play()
 	spawn_coin_2d(node)
 	if(node):
 		node.queue_free()
@@ -578,13 +591,16 @@ func CollectedCoin(node,n):
 func _on_button_pressed():
 	gameStart=false
 	rootNode.timepasses=false
-	$ApMusic.volume_db=-20.0
+	$ApMusic.volume_db=-30.0
 	fade(0.03)
 	CallCamera(cat,1,1.0)
 	global_transform.origin=startGameTrigger.global_transform.origin
-	rootNode.time_of_day=20.0
+	rootNode.time_of_day=12.0
 	$Ui/Main_Sight.visible=true
 	$Ui/StartGame.visible=false
+	$Ui/StartGame.visible=false
+	$Ui/Dia.visible=true
+	$Ui/Water.visible=true
 	paused=false
 	$CorredorMusic.play()
 	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
@@ -606,13 +622,12 @@ func _on_back_to_menu_pressed():
 func _on_laser_pressed():
 	if money>=100 and laser==false:
 		laser=true
-		
 		money-=100
 	moneyCounter.text=str(money)
 
 func _on_regador_pressed():
 	if money>=70 and !isRegadorTunado:
-		water=999
+		waterMax=15
 		money-=70
 	moneyCounter.text=str(money)
 

@@ -8,7 +8,7 @@ var shader_material
 @onready var rootNode = get_tree().get_root().get_node("World")
 @onready var plants = get_tree().get_root().get_node("World/AP/Plants")
 func PlayAction():
-	if player.catHipnose<=0 and rootNode.time_of_day>22 and rootNode.time_of_day<2:
+	if player.catHipnose<=0 and rootNode.time_of_day>1 and rootNode.time_of_day<6:
 		if has_node("AnimationPlayer"):
 			$AnimationPlayer.play("ANIM")
 		set_shader()

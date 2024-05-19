@@ -14,7 +14,7 @@ func Recolor():
 	noise_texture.noise.fractal_type=3
 	# Iterate over all children of this node
 	#var d = (randf()*7)+0.8
-	var d = randf_range(1.0,3.0)
+	var d = randf_range(0.8,2.0)
 	print(d)
 	for child in get_children():
 		if child is MeshInstance3D:
@@ -29,10 +29,4 @@ func Recolor():
 			
 			var random_color = Color(randf() / d, randf() / d, randf() / d)
 			material.albedo_color = random_color
-			
-					# Create and configure a noise texture
-		
-		
-			
-			# Apply the noise texture to the material's albedo texture
 			material.albedo_texture = noise_texture

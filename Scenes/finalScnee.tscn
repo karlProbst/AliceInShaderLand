@@ -1,0 +1,83 @@
+[gd_scene load_steps=7 format=3 uid="uid://eli042dvxncb"]
+
+[ext_resource type="VideoStream" path="res://VideoFinal.ogv" id="1_c5ns4"]
+[ext_resource type="AudioStream" uid="uid://crdmiv47nf47x" path="res://musica/Weirderland.mp3" id="2_ikwba"]
+[ext_resource type="Texture2D" uid="uid://dbpu5udrdwfwi" path="res://Textures/CARALEGAL.png" id="3_mldl1"]
+
+[sub_resource type="Animation" id="Animation_vqiko"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_mmna3"]
+resource_name = "blink_guy"
+length = 33.0
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 29.4, 31.4),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 1), Color(1, 1, 1, 1), Color(1, 1, 1, 0)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_xgfdf"]
+_data = {
+"RESET": SubResource("Animation_vqiko"),
+"blink_guy": SubResource("Animation_mmna3")
+}
+
+[node name="Node2D" type="Node2D"]
+
+[node name="VideoStreamPlayer" type="VideoStreamPlayer" parent="."]
+offset_right = 1282.0
+offset_bottom = 722.0
+stream = ExtResource("1_c5ns4")
+autoplay = true
+expand = true
+
+[node name="RichTextLabel" type="RichTextLabel" parent="."]
+offset_right = 305.0
+offset_bottom = 720.0
+text = "Créditos:
+
+Karl Probst - Programador/ game design/Música
+
+Ovnicius - Música/ Fx/ 2D Assets/ moral na programação
+
+Gilberto Mayworm - 3D Assets/ 2D Assets/ Level Design/​ moral no game design
+
+Maurício - Música/ 3D Assets​
+
+Bernardo - 3D Assets​"
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("2_ikwba")
+volume_db = -23.637
+autoplay = true
+
+[node name="Caralegal" type="Sprite2D" parent="."]
+modulate = Color(1, 1, 1, 0)
+position = Vector2(427, 341)
+scale = Vector2(2.06642, 1.0669)
+texture = ExtResource("3_mldl1")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Caralegal"]
+libraries = {
+"": SubResource("AnimationLibrary_xgfdf")
+}
+autoplay = "blink_guy"

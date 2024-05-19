@@ -27,6 +27,7 @@ func set_shader():
 	var mesh_instance = $Mesh
 
 func grow():
+	State.catAtackTrigge=false
 	player.scale_var=player.scale_var_default
 	player.rootNode.time_of_day=6.5
 	player.fade()

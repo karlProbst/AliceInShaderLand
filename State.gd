@@ -10,6 +10,7 @@ var catAtackTriggerLock = false
 @onready var gameScript=preload("res://Dialog/Script.dialogue")
 func _ready():
 	world = get_world()
+	
 func set_hasRegador(status):
 	
 	if status in ["no", "has", "no water"]:
@@ -41,3 +42,11 @@ func get_world() -> Node:
 	else:
 		print("World node not found.")
 		return null
+
+func Reseta():
+	world = get_world()
+	stuck=false
+	enteringApTrigger=false
+	catAtackTrigger=false
+	catAtackTriggerLock = false
+	hasRegador = "no"

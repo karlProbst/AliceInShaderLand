@@ -12,6 +12,18 @@ Gato: Se você pretende cuidar das plantas, a primeira coisa que precisa é de u
 	Gato: Anda logo humano.
 	set enteringApTrigger=false
 	=> end_conversation	
+- O que é isso em cima da geladeira?
+	Gato: Se quiser ficar grandão tome essa poção!
+	set enteringApTrigger=false
+	=> end_conversation
+- Cade a desgraça do regador?
+	Gato: Eu escondi perto do meu nanar!
+	set enteringApTrigger=false
+	=> end_conversation
+- O regador não funciona!?
+	Gato: Enche ele com água. Burro.
+	set enteringApTrigger=false
+	=> end_conversation
 ~ gatoMortal
 set stuck = true
 

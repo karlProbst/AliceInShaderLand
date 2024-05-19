@@ -5,7 +5,7 @@ var day_length = 180.0  # Day length in seconds (how long a full 24-hour cycle t
 var time_of_day = 20.0  # Current time of day in hours
 @onready var environment : WorldEnvironment = $WorldEnvironment
 @onready var sunMoon = $DirectionalLight3D
-var day = 1
+var day =1
 var lanternLives=10
 var death = false
 var deathtimer=0
@@ -30,16 +30,19 @@ func callCat():
 	
 	return
 func _ready():
-	pass
-
+	get_node("Player_Character/Ui/Dia/CurrentDia").text=str(day)
+	
 
 func _process(delta):
 	if day>=7:
-		pass	
+		get_tree().change_scene_to_file("res://Scenes/finalScnee.tscn")
 	if death:
 		
 		deathtimer+=delta*5
 		if deathtimer<0.5:
+			get_node("AP/Porta/AnimationPlayer").play("Abrindo")
+			if get_node("AP/Porta/CollisionShape3D"):
+				get_node("AP/Porta/CollisionShape3D").queue_free()
 			get_node("cat").stuck=10
 		if deathtimer<5:
 			time_of_day -= (delta / day_length/2) * 24.0 
@@ -71,13 +74,13 @@ func _process(delta):
 				day+=1
 				get_node("Player_Character/Ui/Dia/CurrentDia").text=str(day)
 			spawn=true
-			
+			 
 		get_tree().get_root().get_node("World/AP/Plants").resetPlants()
 		time_of_day -= 24.0 
 		
 
-	if time_of_day>0 and time_of_day<1 and spawn and !get_node("Player_Character").gameStart:
-		get_node("EtScapeLook").spawn_et(day*day*2)
+	if day>1 and time_of_day>0 and time_of_day<1 and spawn and !get_node("Player_Character").gameStart:
+		get_node("EtScapeLook").spawn_et(day*3)
 		spawn=false
 	sunMoon.rotation_degrees.x = calculate_rotation(time_of_day)
 	$AP/Clock.set_time(time_of_day)

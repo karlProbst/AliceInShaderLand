@@ -2,6 +2,7 @@ extends RigidBody3D
 
 #@onready var node=get_tree().get_root().get_node("World/EtScapeLook")
 @onready var node=get_tree().get_root().get_node("World/Lanterna")
+@onready var player=get_tree().get_root().get_node("World/Player_Character")
 # Called when the node enters the scene tree for the first time.
 var force_magnitude: float = 0.015
 # Define damping factors to reduce unwanted lateral movement and rotation.
@@ -35,6 +36,7 @@ func _on_die_timeout():
 func killEt(n):
 	life-=n
 	if life<=0:
+		player.spawn_coins(5,global_transform.origin)
 		queue_free()
 	$redShine.scale=Vector3(2,2,2)
 	
